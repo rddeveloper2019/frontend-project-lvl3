@@ -9,8 +9,11 @@ build:
 	NODE_ENV=production npx webpack
 
 test:
-	npm test
+	npx jest
 
+test-coverage:
+	npx jest --coverage
+	
 lint:
 	npx eslint .
 
