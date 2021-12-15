@@ -3,7 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RSS Aggregator</title>
+    <title>!!!!!!!</title>
+    <!-- <title>RSS Aggregator</title> -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <body class="d-flex flex-column min-vh-100">
@@ -47,7 +52,7 @@
         </div>
       </div>
       <main class="flex-grow-1">
-        <section class="container-fluid bg-dark p-5">
+        <section class="container-fluid bg-dark p-5 form-container">
           <div class="row">
             <div class="col-md-10 col-lg-8 mx-auto text-white">
               <h1 class="display-3 mb-0">RSS агрегатор</h1>
@@ -76,6 +81,7 @@
                       type="submit"
                       aria-label="add"
                       class="h-100 btn btn-lg btn-primary px-sm-5"
+                      id="add-feed-button"
                     >
                       Добавить
                     </button>
@@ -85,7 +91,7 @@
               <p class="mt-2 mb-0 text-muted">
                 Пример: https://ru.hexlet.io/lessons.rss
               </p>
-              <p class="feedback m-0 position-absolute small text-success">
+              <p class="feedback m-0 position-absolute small" id="feedback">
                 RSS успешно загружен
               </p>
             </div>
