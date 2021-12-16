@@ -2,6 +2,13 @@
 import * as yup from 'yup';
 import uniqid from 'uniqid';
 import onChange from 'on-change';
+import i18n from '../locales';
+
+yup.setLocale({
+  string: {
+    url: i18n.t('form.feedback.invalidUrl'),
+  },
+});
 
 const schema = yup.object().shape({
   value: yup.string().url().required(),
@@ -11,13 +18,7 @@ const isUrlUnique = (array, url) => {
   if (array.length === 0) {
     return true;
   }
-  let result = true;
-  array.forEach((feed) => {
-    if (feed.value === url) {
-      result = false;
-    }
-  });
-  return result;
+  return array.every((item) => item.url !== url);
 };
 
 const validateInput = (value) => new Promise((resolve) => {
@@ -46,12 +47,12 @@ const controller = (state, elements) => {
       if (errorData) {
         state.form.error = errorData;
       } else if (isUrlUnique(currentState.feed.feeds, value)) {
-        const newFeed = { id: uniqid(), value };
+        const newFeed = { id: uniqid(), url: value };
         state.feed.feeds = [newFeed, ...currentState.feed.feeds];
-        state.form.success = ['RSS успешно загружен'];
+        state.form.success = [`${i18n.t('form.feedback.success')}`];
       } else {
         state.form.success = null;
-        state.form.error = ['RSS уже существует'];
+        state.form.error = [`${i18n.t('form.feedback.duplicatedURL')}`];
       }
     }).catch((err) => console.log(err));
   });

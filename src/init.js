@@ -2,7 +2,6 @@ import controller from './controller';
 import model from './model';
 
 const initialState = {
-  appLanguage: 'ru',
   form: {
     value: '',
     error: null,
@@ -25,8 +24,6 @@ const posts = postsContainer.querySelectorAll('li');
 const feedsContainer = document.querySelector('.feeds');
 const feeds = feedsContainer.querySelectorAll('li');
 
-formFeedbackEl.textContent = '';
-
 const elements = {
   form: {
     form, input, addBtn, formFeedbackEl,
@@ -42,7 +39,6 @@ const elements = {
 
 const init = () => {
   const state = model(initialState, elements);
-
   controller(state, elements);
 };
 
