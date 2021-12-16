@@ -1,69 +1,87 @@
 /* eslint-disable no-lone-blocks */
-import _ from 'lodash';
 
 const clearForm = (elements) => {
   const {
-    input, formFeedbackEl,
+    input, formFeedbackEl, addBtn,
   } = elements;
 
   formFeedbackEl.classList.remove('text-success');
   formFeedbackEl.classList.remove('text-danger');
   formFeedbackEl.textContent = '';
   input.classList.remove('is-invalid');
+  addBtn.removeAttribute('disabled');
 };
 
-const renderForm = (elements, feedbackText, flag) => {
-  console.log(feedbackText);
-  if (!feedbackText) {
-    return;
-  }
+const renderForm = (elements, flag, message) => {
   const classes = {
-    success: 'text-success',
+    ready: 'text-success',
+    editing: 'text-success',
     error: 'text-danger',
   };
 
+  console.log(elements);
   const {
     form,
-    input, formFeedbackEl,
+    input, formFeedbackEl, addBtn,
   } = elements;
 
-  clearForm(elements);
+  switch (flag) {
+    case 'ready': {
+      clearForm(elements);
+      formFeedbackEl.classList.add(classes[flag]);
+      formFeedbackEl.textContent = message;
+      form.reset();
+      input.focus();
+    }
+      break;
+    case 'editing': {
+      formFeedbackEl.classList.add(classes[flag]);
+      input.classList.remove('is-invalid');
+    }
+      break;
 
-  if (flag === 'error') {
-    input.classList.add('is-invalid');
+    case 'sending': {
+      clearForm(elements);
+      addBtn.disabled = true;
+    }
+      break;
+    case 'error': {
+      clearForm(elements);
+      input.classList.add('is-invalid');
+      formFeedbackEl.classList.add(classes[flag]);
+      formFeedbackEl.textContent = message;
+    }
+      break;
+    default:
+      return;
   }
+
   if (flag === 'success') {
     form.reset();
     input.focus();
   }
-  formFeedbackEl.classList.add(classes[flag]);
-  formFeedbackEl.textContent = feedbackText;
 };
 
-const app = (elements) => (path, value, prevValue) => {
+const app = (elements) => (path, value) => {
   console.log(path);
   console.log(value);
-  console.log(elements);
 
   switch (path) {
-    case 'form.error': {
-      if (value !== prevValue) {
-        renderForm(elements.form, value, 'error');
+    case 'form': {
+      const { status, message } = value;
+
+      if (status === 'editing') {
+        renderForm(elements.form, status);
       }
-    }
-      break;
-    case 'form.inputData': {
-      if (!_.isEqual(value, prevValue)) {
-        clearForm(elements.form);
+      if (status === 'sending') {
+        renderForm(elements.form, status);
       }
-    }
-      break;
-    case 'form.success': {
-      renderForm(elements.form, value, 'success');
-    }
-      break;
-    case 'feed.feeds': {
-      console.log(value);
+      if (status === 'error') {
+        renderForm(elements.form, status, message);
+      }
+      if (status === 'ready') {
+        renderForm(elements.form, status, message);
+      }
     }
       break;
     default: {

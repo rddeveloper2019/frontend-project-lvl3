@@ -14,13 +14,6 @@ const schema = yup.object().shape({
   value: yup.string().url().required(),
 });
 
-const isUrlUnique = (array, url) => {
-  if (array.length === 0) {
-    return true;
-  }
-  return array.every((item) => item.url !== url);
-};
-
 const validateInput = (value) => new Promise((resolve) => {
   resolve(schema.validate({ value }));
 }).then(() => '').catch((err) => {
@@ -31,28 +24,49 @@ const validateInput = (value) => new Promise((resolve) => {
   return '';
 });
 
-const controller = (state, elements) => {
+const isUrlUnique = (feeds, url) => {
+  if (feeds.length === 0) {
+    return true;
+  }
+  return feeds.every((item) => item.url !== url);
+};
+
+const getCurrentState = (state, field = null) => {
+  const currentState = onChange.target(state);
+  return field ? currentState[field] : currentState;
+};
+
+const controller = (state, elements, handlers) => {
+  const { handleFormState, handleFeedState } = handlers;
   const { form, input } = elements.form;
   input.focus();
+
   input.addEventListener('input', (e) => {
     const { value } = e.target;
-    state.form.value = value;
+    handleFormState({ status: 'editing', inputValue: value });
   });
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    const currentState = onChange.target(state);
-    const { value } = currentState.form;
-    validateInput(value).then((errorData) => {
+
+    handleFormState({ status: 'sending' });
+
+    const { inputValue } = getCurrentState(state, 'form');
+    const { feeds } = getCurrentState(state, 'feed');
+
+    validateInput(inputValue).then((errorData) => {
       if (errorData) {
-        state.form.error = errorData;
-      } else if (isUrlUnique(currentState.feed.feeds, value)) {
-        const newFeed = { id: uniqid(), url: value };
-        state.feed.feeds = [newFeed, ...currentState.feed.feeds];
-        state.form.success = [`${i18n.t('form.feedback.success')}`];
+        handleFormState({ status: 'error', message: errorData });
+        return;
+      }
+
+      if (isUrlUnique(feeds, inputValue)) {
+        const newFeed = { id: uniqid(), url: inputValue };
+        handleFeedState({ feed: newFeed });
+
+        setTimeout(() => { handleFormState({ status: 'ready', message: [`${i18n.t('form.feedback.success')}`] }); }, 3000);
       } else {
-        state.form.success = null;
-        state.form.error = [`${i18n.t('form.feedback.duplicatedURL')}`];
+        handleFormState({ status: 'error', message: [`${i18n.t('form.feedback.duplicatedURL')}`] });
       }
     }).catch((err) => console.log(err));
   });

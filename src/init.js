@@ -3,8 +3,9 @@ import model from './model';
 
 const initialState = {
   form: {
-    value: '',
-    error: null,
+    status: 'ready',
+    inputValue: null,
+    message: null,
   },
   feed: {
     activeFeedId: '',
@@ -38,8 +39,8 @@ const elements = {
 };
 
 const init = () => {
-  const state = model(initialState, elements);
-  controller(state, elements);
+  const { state, handlers } = model(initialState, elements);
+  controller(state, elements, handlers);
 };
 
 export default init;
