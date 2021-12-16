@@ -1,4 +1,5 @@
 /* eslint-disable no-lone-blocks */
+import i18n from '../locales';
 
 const clearForm = (elements) => {
   const {
@@ -19,7 +20,6 @@ const renderForm = (elements, flag, message) => {
     error: 'text-danger',
   };
 
-  console.log(elements);
   const {
     form,
     input, formFeedbackEl, addBtn,
@@ -62,9 +62,47 @@ const renderForm = (elements, flag, message) => {
   }
 };
 
+const renderPosts = (elements, data) => {
+  const { posts } = data;
+  const { postsContainer } = elements;
+  const postsEl = document.createElement('div');
+  postsEl.classList.add('card', 'border-0');
+  const template = `
+    <div class="card-body"><h2 class="card-title h4">${i18n.t('posts')}</h2></div>
+      <ul class="list-group border-0 rounded-0">
+        ${posts.map((post) => `
+        <li class="list-group-item d-flex justify-content-between align-items-start border-0 border-end-0"><a
+        href=${post.link} class="fw-bold" data-id=${post.id}
+        target="_blank" rel="noopener noreferrer">${post.title}</a><button type="button" class="btn btn-outline-primary btn-sm" data-id=${post.id} data-bs-toggle="modal"
+        data-bs-target="#modal">${i18n.t('viewButton')}</button></li>`).join('')}
+      </ul>`;
+  postsEl.innerHTML = template;
+  postsContainer.innerHTML = '';
+  postsContainer.append(postsEl);
+};
+
+const renderFeeds = (elements, data) => {
+  const { feeds } = data;
+  const { feedsContainer } = elements;
+  const feedsEl = document.createElement('div');
+  feedsEl.classList.add('card', 'border-0');
+
+  const template = `
+    <div class="card-body"><h2 class="card-title h4">${i18n.t('feeds')}</h2></div>
+      <ul class="list-group border-0 rounded-0">
+        ${feeds.map((feed) => `<li class="list-group-item border-0 border-end-0" data-feed-id="${feed.id}"><h3 class="h6 m-0">${feed.title}</h3>
+        <p class="m-0 small text-black-50">${feed.description}</p>
+        </li>`).join('')}
+      </ul>`;
+
+  feedsEl.innerHTML = template;
+  feedsContainer.innerHTML = '';
+  feedsContainer.append(feedsEl);
+};
+
 const app = (elements) => (path, value) => {
-  console.log(path);
-  console.log(value);
+  // console.log(path);
+  // console.log(value);
 
   switch (path) {
     case 'form': {
@@ -84,6 +122,16 @@ const app = (elements) => (path, value) => {
       }
     }
       break;
+    case 'feedsStore': {
+      renderFeeds(elements.feed, value);
+    }
+      break;
+
+    case 'postsStore': {
+      renderPosts(elements.post, value);
+    }
+      break;
+
     default: {
       console.log('default');
     }

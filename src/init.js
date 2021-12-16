@@ -1,3 +1,4 @@
+import onChange from 'on-change';
 import controller from './controller';
 import model from './model';
 
@@ -7,12 +8,12 @@ const initialState = {
     inputValue: null,
     message: null,
   },
-  feed: {
+  feedsStore: {
     activeFeedId: '',
     feeds: [],
-    posts: {
-      feedId: [],
-    },
+  },
+  postsStore: {
+    posts: [],
   },
 };
 
@@ -41,6 +42,9 @@ const elements = {
 const init = () => {
   const { state, handlers } = model(initialState, elements);
   controller(state, elements, handlers);
+  document.querySelector('#current-state').addEventListener('click', () => {
+    console.log(onChange.target(state));
+  });
 };
 
 export default init;

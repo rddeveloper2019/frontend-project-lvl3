@@ -8,8 +8,13 @@ const ru = {
         success: 'RSS успешно загружен',
         invalidUrl: 'Ссылка должна быть валидным URL',
         duplicatedURL: 'RSS уже существует',
+        fetchError: 'Ресурс не содержит валидный RSS',
       },
     },
+
+    feeds: 'Фиды',
+    posts: 'Посты',
+    viewButton: 'Просмотр',
 
   },
 };

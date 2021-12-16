@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 import * as yup from 'yup';
-import uniqid from 'uniqid';
 import onChange from 'on-change';
 import i18n from '../locales';
 
@@ -37,7 +36,7 @@ const getCurrentState = (state, field = null) => {
 };
 
 const controller = (state, elements, handlers) => {
-  const { handleFormState, handleFeedState } = handlers;
+  const { handleFormState, fetchRSSFeeds } = handlers;
   const { form, input } = elements.form;
   input.focus();
 
@@ -52,7 +51,7 @@ const controller = (state, elements, handlers) => {
     handleFormState({ status: 'sending' });
 
     const { inputValue } = getCurrentState(state, 'form');
-    const { feeds } = getCurrentState(state, 'feed');
+    const { feeds } = getCurrentState(state, 'feedsStore');
 
     validateInput(inputValue).then((errorData) => {
       if (errorData) {
@@ -61,10 +60,7 @@ const controller = (state, elements, handlers) => {
       }
 
       if (isUrlUnique(feeds, inputValue)) {
-        const newFeed = { id: uniqid(), url: inputValue };
-        handleFeedState({ feed: newFeed });
-
-        setTimeout(() => { handleFormState({ status: 'ready', message: [`${i18n.t('form.feedback.success')}`] }); }, 3000);
+        fetchRSSFeeds(inputValue);
       } else {
         handleFormState({ status: 'error', message: [`${i18n.t('form.feedback.duplicatedURL')}`] });
       }

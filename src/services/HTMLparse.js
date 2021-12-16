@@ -1,18 +1,24 @@
 import uniqid from 'uniqid';
 
-const HTMLparse = (xml) => {
+const getTextContent = (elelemt, selector) => {
+  const elem = elelemt.querySelector(selector);
+  if (elem) {
+    return elem.textContent;
+  }
+  return null;
+};
+
+const parse = (xml) => {
   const parser = new DOMParser();
   const htmlDoc = parser.parseFromString(xml, 'application/xml');
-  const getTextContent = (elelemt, selector) => {
-    const elem = elelemt.querySelector(selector);
-    if (elem) {
-      return elem.textContent;
-    }
-    return null;
-  };
+  const fetchedItems = htmlDoc.querySelectorAll('item');
+  if (fetchedItems.length === 0) {
+    throw new Error('invalid xml data');
+  }
+
   const parsed = {
     channel: {
-      id: uniqid('channel_'),
+      id: uniqid('feed_'),
       title: getTextContent(htmlDoc, 'title'),
       description: getTextContent(htmlDoc, 'description'),
       link: getTextContent(htmlDoc, 'link'),
@@ -29,8 +35,9 @@ const HTMLparse = (xml) => {
     },
   };
 
-  htmlDoc.querySelectorAll('item').forEach((item) => {
+  fetchedItems.forEach((item) => {
     const itemObj = {
+      channelId: parsed.channel.id,
       id: uniqid('item_'),
       title: getTextContent(item, 'title'),
       guid: getTextContent(item, 'guid'),
@@ -45,5 +52,9 @@ const HTMLparse = (xml) => {
 
   return parsed;
 };
+
+const HTMLparse = (xml) => new Promise((resolve) => {
+  resolve(parse(xml));
+});
 
 export default HTMLparse;
