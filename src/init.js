@@ -42,8 +42,18 @@ const elements = {
 const init = () => {
   const { state, handlers } = model(initialState, elements);
   controller(state, elements, handlers);
+
+  //! remove
+
   document.querySelector('#current-state').addEventListener('click', () => {
     console.log(onChange.target(state));
+  });
+
+  form.parentElement.querySelectorAll('p.text-muted').forEach((p) => {
+    p.addEventListener('click', (e) => {
+      const text = e.target.textContent.split('Пример: ')[1].trim();
+      input.value = `${text} `;
+    });
   });
 };
 

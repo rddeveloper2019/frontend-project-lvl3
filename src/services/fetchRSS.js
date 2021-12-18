@@ -1,15 +1,23 @@
 import axios from 'axios';
 
-const allOriginsAPIUrl = 'https://hexlet-allorigins.herokuapp.com/get?charset=utf-8&url=';
+const allOriginsAPIUrl = 'https://hexlet-allorigins.herokuapp.com/get?disableCache=true&charset=utf-8&url=';
+
+const testUrl = 'http://lorem-rss.herokuapp.com/feed';
+
+const generateUrl = (url, mode) => {
+  if (mode === 'test') {
+    return `${allOriginsAPIUrl}${testUrl}`;
+  }
+  if (mode === 'develop') {
+    return `${allOriginsAPIUrl}${url}`;
+  }
+  return url;
+};
 
 const fetchRSSFeeds = (url) => new Promise((resolve) => {
-  const testUrl = 'http://lorem-rss.herokuapp.com/feed';
-  const currnentUrl = url || testUrl;
-  const RSSUrl = `${allOriginsAPIUrl}${currnentUrl}`;
-
   resolve(
     axios.get(
-      RSSUrl,
+      generateUrl(url, 'develop'),
     ),
   );
 });
