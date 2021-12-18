@@ -15,7 +15,7 @@ const stateHandlers = (state) => {
   };
 
   const handleFeedsStore = (payload) => {
-    const { feeds } = onChange.target(state).feedsStore;
+    const { feeds } = onChange.target(state.feedsStore);
     const newStore = {
       activeFeedId: payload.id,
       feeds: [payload, ...feeds],
@@ -29,7 +29,7 @@ const stateHandlers = (state) => {
   };
 
   const handlePostsStore = (newPosts) => {
-    const { posts } = onChange.target(state).postsStore;
+    const { posts } = onChange.target(state.postsStore);
     if (newPosts.length > 20) {
       // eslint-disable-next-line no-param-reassign
       newPosts.length = 20;
@@ -82,11 +82,9 @@ const stateHandlers = (state) => {
 
     setTimeout(() => {
       if (needUpdate) {
-        console.log('need autofetch');
         autoFetch(feeds);
         autoUpdate('on');
       } else {
-        console.log('not need autofetch');
         autoUpdate('on');
       }
     }, 5000);

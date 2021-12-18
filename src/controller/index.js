@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 import * as yup from 'yup';
-import onChange from 'on-change';
 import i18n from '../locales';
 
 yup.setLocale({
@@ -30,14 +29,16 @@ const isUrlUnique = (feeds, url) => {
   return feeds.every((item) => item.url !== url);
 };
 
-const getCurrentState = (state, field = null) => {
-  const currentState = onChange.target(state);
-  return field ? currentState[field] : currentState;
-};
-
-const controller = (state, elements, handlers) => {
-  const { handleFormState, fetchRSSFeeds } = handlers;
+const controller = (elements, handlers, utilities) => {
+  const { handleFormState, fetchRSSFeeds, UiHandlers } = handlers;
+  const { getCurrentState } = utilities;
+  const { addVisitedPostId } = UiHandlers;
   const { form, input } = elements.form;
+
+  const {
+    postsContainer,
+  } = elements.post;
+
   input.focus();
 
   input.addEventListener('input', (e) => {
@@ -50,8 +51,8 @@ const controller = (state, elements, handlers) => {
 
     handleFormState({ status: 'sending' });
 
-    const { inputValue } = getCurrentState(state, 'form');
-    const { feeds } = getCurrentState(state, 'feedsStore');
+    const { inputValue } = getCurrentState('form');
+    const { feeds } = getCurrentState('feedsStore');
 
     validateInput(inputValue).then((errorData) => {
       if (errorData) {
@@ -65,6 +66,21 @@ const controller = (state, elements, handlers) => {
         handleFormState({ status: 'error', message: [`${i18n.t('form.feedback.duplicatedURL')}`] });
       }
     }).catch((err) => console.log(err));
+  });
+
+  postsContainer.addEventListener('click', (e) => {
+    e.preventDefault();
+    const dataId = e.target.dataset.id;
+    // const postElement = document.querySelector(`li[data-id=${dataId}]`);
+    const link = document.querySelector(`a[data-id=${dataId}]`);
+    const button = document.querySelector(`button[data-id=${dataId}]`);
+
+    if (e.target === link) {
+      addVisitedPostId(dataId);
+    }
+    if (e.target === button) {
+      addVisitedPostId(dataId);
+    }
   });
 };
 

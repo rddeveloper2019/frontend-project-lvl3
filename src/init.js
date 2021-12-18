@@ -15,6 +15,9 @@ const initialState = {
   postsStore: {
     posts: [],
   },
+  UI: {
+    visitedPostsIDs: [],
+  },
 };
 
 const form = document.querySelector('form');
@@ -40,8 +43,8 @@ const elements = {
 };
 
 const init = () => {
-  const { state, handlers } = model(initialState, elements);
-  controller(state, elements, handlers);
+  const { state, handlers, utilities } = model(initialState, elements);
+  controller(elements, handlers, utilities);
 
   //! remove
 

@@ -31,6 +31,7 @@ const parse = (xml) => {
         title: getTextContent(htmlDoc, 'image title'),
         description: getTextContent(htmlDoc, 'image description'),
         link: getTextContent(htmlDoc, 'image link'),
+
       },
     },
   };
@@ -46,6 +47,7 @@ const parse = (xml) => {
       pubDate: getTextContent(item, 'pubDate'),
       category: getTextContent(item, 'category'),
       author: getTextContent(item, 'author'),
+      visited: false,
     };
     parsed.channel.items.push(itemObj);
   });
