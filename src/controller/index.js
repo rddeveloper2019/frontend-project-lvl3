@@ -6,6 +6,9 @@ yup.setLocale({
   string: {
     url: i18n.t('form.feedback.invalidUrl'),
   },
+  mixed: {
+    default: 'неизвестная ошибка',
+  },
 });
 
 const schema = yup.object().shape({
@@ -31,13 +34,17 @@ const isUrlUnique = (feeds, url) => {
 
 const controller = (elements, handlers, utilities) => {
   const { handleFormState, fetchRSSFeeds, UiHandlers } = handlers;
-  const { getCurrentState } = utilities;
+  const { getCurrentState, getPostData } = utilities;
   const { addVisitedPostId } = UiHandlers;
   const { form, input } = elements.form;
 
   const {
     postsContainer,
   } = elements.post;
+
+  const {
+    modalBody, modalTitle, modalReadMoreLink,
+  } = elements.modalEl;
 
   input.focus();
 
@@ -69,7 +76,7 @@ const controller = (elements, handlers, utilities) => {
   });
 
   postsContainer.addEventListener('click', (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     const dataId = e.target.dataset.id;
     // const postElement = document.querySelector(`li[data-id=${dataId}]`);
     const link = document.querySelector(`a[data-id=${dataId}]`);
@@ -79,7 +86,11 @@ const controller = (elements, handlers, utilities) => {
       addVisitedPostId(dataId);
     }
     if (e.target === button) {
+      const { title, description, link: postLink } = getPostData(dataId);
       addVisitedPostId(dataId);
+      modalTitle.textContent = title;
+      modalBody.textContent = description;
+      modalReadMoreLink.setAttribute('href', postLink);
     }
   });
 };

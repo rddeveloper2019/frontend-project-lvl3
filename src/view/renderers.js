@@ -61,7 +61,9 @@ const addVisitedPost = (elements, data) => {
   const selector = data[data.length - 1];
   const visitedPostEl = elements.postsContainer.querySelector(`a[data-id=${selector}]`);
   visitedPostEl.classList.remove('fw-bold');
+  visitedPostEl.classList.remove('link-dark');
   visitedPostEl.classList.add('fw-normal');
+  visitedPostEl.classList.add('link-secondary');
 };
 
 const renderPosts = (elements, data) => {
@@ -72,9 +74,9 @@ const renderPosts = (elements, data) => {
 
   const getLinkClass = (post) => {
     if (post.visited) {
-      return 'fw-normal';
+      return 'fw-normal link-dark';
     }
-    return 'fw-bold';
+    return 'fw-bold link-dark';
   };
 
   const template = `
@@ -83,7 +85,7 @@ const renderPosts = (elements, data) => {
         ${posts.map((post) => `
         <li class="list-group-item d-flex justify-content-between align-items-start border-0 border-end-0"><a
         href=${post.link} class=${getLinkClass(post)} data-id=${post.id}
-        target="_blank" rel="noopener noreferrer">${post.title}</a><button type="button" class="btn btn-outline-primary btn-sm" data-id=${post.id} data-bs-toggle="modal"
+        target="_blank" rel="noopener noreferrer">${post.title}</a><button type="button" class="btn btn-outline-dark btn-sm" data-id=${post.id} data-bs-toggle="modal"
         data-bs-target="#modal">${i18n.t('viewButton')}</button></li>`).join('')}
       </ul>`;
   postsEl.innerHTML = template;
@@ -100,7 +102,7 @@ const renderFeeds = (elements, data) => {
   const template = `
     <div class="card-body"><h2 class="card-title h4">${i18n.t('feeds')}</h2></div>
       <ul class="list-group border-0 rounded-0">
-        ${feeds.map((feed) => `<li class="list-group-item border-0 border-end-0" data-feed-id="${feed.id}"><h3 class="h6 m-0">${feed.title}</h3>
+        ${feeds.map((feed) => `<li class="list-group-item border border-dark mb-1 bg-light" data-feed-id="${feed.id}"><h3 class="h6 fw-bold m-0">${feed.title}</h3>
         <p class="m-0 small text-black-50">${feed.description}</p>
         </li>`).join('')}
       </ul>`;

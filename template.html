@@ -9,9 +9,10 @@
       href="https://raw.githubusercontent.com/rddeveloper2019/publicfiles/main/rss%20aggregator/favicon_rss.png"
       type="image/x-icon"
     />
-
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css?family=Poppins"
+      href="https://fonts.googleapis.com/css2?family=Cairo&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -28,7 +29,7 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title"></h5>
+              <h5 class="modal-title text-dark"></h5>
               <button
                 type="button"
                 class="btn-close close"
@@ -39,7 +40,8 @@
             <div class="modal-body"></div>
             <div class="modal-footer">
               <a
-                class="btn btn-primary full-article"
+                class="btn btn-outline-dark full-article"
+                data-more-link
                 href="#"
                 role="button"
                 target="_blank"
@@ -61,9 +63,7 @@
           <div class="row">
             <div class="col-md-10 col-lg-8 mx-auto text-white">
               <h1 class="display-3 mb-0">RSS агрегатор</h1>
-              <!-- <p class="lead">
-                Начните читать RSS сегодня! Это легко, это красиво.
-              </p> -->
+
               <div class="shadow p-3 mb-1 rounded lead">
                 <p>Твой любимый контент из любимых ресурсов!</p>
                 <p>Без лишних виджетов, баннеров и рекламы!</p>
@@ -90,7 +90,7 @@
                     <button
                       type="submit"
                       aria-label="add"
-                      class="h-100 btn btn-lg btn-primary px-sm-5"
+                      class="h-100 btn btn-lg btn-dark px-sm-5"
                       id="add-feed-button"
                     >
                       Добавить

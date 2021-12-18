@@ -1,4 +1,5 @@
 import onChange from 'on-change';
+
 import controller from './controller';
 import model from './model';
 
@@ -28,6 +29,10 @@ const postsContainer = document.querySelector('.posts');
 const posts = postsContainer.querySelectorAll('li');
 const feedsContainer = document.querySelector('.feeds');
 const feeds = feedsContainer.querySelectorAll('li');
+const modal = document.querySelector('#modal');
+const modalBody = modal.querySelector('.modal-body');
+const modalTitle = modal.querySelector('.modal-title');
+const modalReadMoreLink = modal.querySelector('[data-more-link]');
 
 const elements = {
   form: {
@@ -38,6 +43,9 @@ const elements = {
   },
   feed: {
     feedsContainer, feeds,
+  },
+  modalEl: {
+    modal, modalBody, modalTitle, modalReadMoreLink,
   },
 
 };

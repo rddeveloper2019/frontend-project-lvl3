@@ -6,8 +6,18 @@ const utils = (state) => {
     return field ? currentState[field] : currentState;
   };
 
+  const getPostData = (id, selector = 'all') => {
+    const { posts } = getCurrentState('postsStore');
+    const [currentPost] = posts.filter((post) => post.id === id);
+    const postData = { ...currentPost };
+    if (selector === 'all') {
+      return postData;
+    }
+    return postData[selector];
+  };
+
   return {
-    getCurrentState,
+    getCurrentState, getPostData,
   };
 };
 export default utils;

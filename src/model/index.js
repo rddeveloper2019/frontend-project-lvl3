@@ -14,12 +14,12 @@ const model = (initialState, elements) => {
   } = stateHandlers(state);
 
   const { addVisitedPostId } = UiStateHandlers(state);
-  const { getCurrentState } = utils(state);
+  const { getCurrentState, getPostData } = utils(state);
 
   const handlers = {
     handleFormState, handleFeedState, fetchRSSFeeds, UiHandlers: { addVisitedPostId },
   };
-  const utilities = { getCurrentState };
+  const utilities = { getCurrentState, getPostData };
 
   autoUpdate('on');
   return { state, handlers, utilities };
