@@ -14,7 +14,8 @@ test-coverage:
 	NODE_OPTIONS=--experimental-vm-modules  npx jest --coverage
 test:
 	NODE_OPTIONS=--experimental-vm-modules  npx jest
-	
+pwd:
+	pwd
 lint:
 	npx eslint .
 
