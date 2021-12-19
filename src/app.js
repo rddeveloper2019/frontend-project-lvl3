@@ -53,22 +53,8 @@ const app = (i18n) => {
 
   };
 
-  // eslint-disable-next-line no-unused-vars
-  const { handlers, utilities, state } = model(initialState, i18n, elements);
+  const { handlers, utilities } = model(initialState, i18n, elements);
   controller(elements, handlers, utilities, i18n);
-
-  //! remove
-
-  // document.querySelector('#current-state').addEventListener('click', () => {
-  //   console.log(onChange.target(state));
-  // });
-
-  // form.parentElement.querySelectorAll('p.text-muted').forEach((p) => {
-  //   p.addEventListener('click', (e) => {
-  //     const text = e.target.textContent.split('Пример: ')[1].trim();
-  //     input.value = `${text} `;
-  //   });
-  // });
 };
 
 export default app;

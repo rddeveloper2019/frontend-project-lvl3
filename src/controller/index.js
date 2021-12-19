@@ -1,7 +1,5 @@
 /* eslint-disable no-param-reassign */
 import * as yup from 'yup';
-import fetchRSS from '../services/fetchRSS';
-import HTMLparse from '../services/HTMLparse';
 
 const isUrlUnique = (feeds, url) => {
   if (feeds.length === 0) {
@@ -10,7 +8,7 @@ const isUrlUnique = (feeds, url) => {
   return feeds.every((item) => item.url !== url);
 };
 
-const elementsEventsController = (elements, { UiHandlers }, { getPostData }, posts) => {
+const elementsEventsController = (elements, { UiHandlers }, { getPostData }) => {
   const { addVisitedPostId } = UiHandlers;
   const {
     modalBody, modalTitle, modalReadMoreLink,
@@ -19,22 +17,6 @@ const elementsEventsController = (elements, { UiHandlers }, { getPostData }, pos
   const {
     postsContainer,
   } = elements;
-
-  // const viewPostButtons = posts.map((post) => document.querySelector(`button[data-id=${post.id}]`));
-  // viewPostButtons.forEach((btn) => {
-  //   btn.addEventListener('click', (e) => {
-  //     console.log(e.target);
-  //     if (e.target.tagName === 'BUTTON' || e.target.tagName === 'LI') {
-  //       console.log(e.target);
-  //       const dataId = e.target.dataset.id;
-  //       const { title, description, link: postLink } = getPostData(dataId);
-  //       addVisitedPostId(dataId);
-  //       modalTitle.textContent = title;
-  //       modalBody.textContent = description;
-  //       modalReadMoreLink.setAttribute('href', postLink);
-  //     }
-  //   });
-  // });
 
   postsContainer.addEventListener('click', (e) => {
     const dataId = e.target.dataset.id;
@@ -45,8 +27,6 @@ const elementsEventsController = (elements, { UiHandlers }, { getPostData }, pos
     }
 
     if (e.target.tagName === 'BUTTON' || e.target.tagName === 'LI') {
-      console.log(e.target);
-      // const dataId = e.target.dataset.id;
       const { title, description, link: postLink } = getPostData(dataId);
       addVisitedPostId(dataId);
       modalTitle.textContent = title;
@@ -58,8 +38,8 @@ const elementsEventsController = (elements, { UiHandlers }, { getPostData }, pos
 
 const controller = (elements, handlers, utilities, i18n) => {
   const {
-    handleFormState, handleFeedsStore, handlePostsStore,
-  } = handlers;
+    handleFormState, handleFeedsStore, handlePostsStore, manualFetch,
+  } = handlers.stateHandlers;
   const { getCurrentState } = utilities;
 
   const { form, input } = elements.formContainer;
@@ -103,29 +83,25 @@ const controller = (elements, handlers, utilities, i18n) => {
       }
 
       if (isUrlUnique(feeds, inputValue)) {
-        fetchRSS(inputValue).then(({ data }) => HTMLparse(data.contents))
-          .then((parsed) => {
-            const {
-              title, description, id, items,
-            } = parsed.channel;
-
-            handleFeedsStore({
-              title, description, id, url: inputValue,
-            });
-            handlePostsStore(items);
-            handleFormState({ status: 'ready', message: [`${i18n.t('form.feedback.success')}`], inputValue: '' });
-            elementsEventsController(elements, handlers, utilities, items);
-          }).catch((err) => {
-            let errorMessage;
-
-            if (err.message) {
-              errorMessage = err.message === 'Invalid Xml Data' ? err.message : 'Network Error';
-            } else {
-              errorMessage = 'Network Error';
-            }
-
-            handleFormState({ status: 'error', message: [`${i18n.t(`form.feedback.fetchErrors.${errorMessage}`)}`] });
+        manualFetch(inputValue).then((parsed) => {
+          const {
+            title, description, id, items,
+          } = parsed;
+          handleFeedsStore({
+            title, description, id, url: inputValue,
           });
+          handlePostsStore(items);
+          handleFormState({ status: 'ready', message: [`${i18n.t('form.feedback.success')}`], inputValue: '' });
+          elementsEventsController(elements, handlers, utilities);
+        }).catch((err) => {
+          let errorMessage;
+          if (err.message) {
+            errorMessage = err.message === 'Invalid Xml Data' ? err.message : 'Network Error';
+          } else {
+            errorMessage = 'Network Error';
+          }
+          handleFormState({ status: 'error', message: [`${i18n.t(`form.feedback.fetchErrors.${errorMessage}`)}`] });
+        });
       } else {
         handleFormState({ status: 'error', message: [`${i18n.t('form.feedback.duplicatedURL')}`] });
       }

@@ -28,6 +28,15 @@ const stateHandlers = (state) => {
     state.postsStore = { posts: updatedPosts };
   };
 
+  const manualFetch = (url) => new Promise((resolve, reject) => {
+    fetchRSS(url).then(({ data }) => HTMLparse(data.contents))
+      .then((parsed) => {
+        resolve(parsed.channel);
+      }).catch((err) => {
+        reject(err);
+      });
+  });
+
   const autoFetch = (feeds) => {
     const fetches = feeds.map((feed) => Promise.resolve(fetchRSS(feed.url, 'auto')));
     Promise.all(fetches)
@@ -64,7 +73,7 @@ const stateHandlers = (state) => {
   };
 
   return {
-    handleFormState, handleFeedsStore, handlePostsStore, autoUpdate,
+    handleFormState, handleFeedsStore, handlePostsStore, autoUpdate, manualFetch,
   };
 };
 
