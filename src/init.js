@@ -48,7 +48,7 @@ const elements = {
 };
 
 const init = () => {
-  const { state, handlers, utilities } = model(initialState, elements);
+  const { handlers, utilities } = model(initialState, elements);
   controller(elements, handlers, utilities);
 };
 
