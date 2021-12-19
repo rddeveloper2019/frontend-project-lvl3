@@ -24,4 +24,5 @@ lint:
 add:
 	git add .
 commit:
-	git commit -m'$$RANDOM'
+
+	git commit -m '$${RANDOM}'
