@@ -17,9 +17,6 @@ const renderFormByStatus = (elements, path, value) => {
 };
 
 const app = (elements) => (path, value) => {
-  // console.log(path);
-  // console.log(value);
-
   if (path === 'form') {
     renderFormByStatus(elements, path, value);
   } else {
@@ -37,7 +34,7 @@ const app = (elements) => (path, value) => {
         break;
 
       default:
-        console.log(path);
+
         break;
     }
   }

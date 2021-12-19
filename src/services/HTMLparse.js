@@ -12,8 +12,8 @@ const parse = (xml) => {
   const parser = new DOMParser();
   const htmlDoc = parser.parseFromString(xml, 'application/xml');
   const fetchedItems = htmlDoc.querySelectorAll('item');
-  if (fetchedItems.length === 0) {
-    throw new Error('invalid xml data');
+  if (!xml || fetchedItems.length === 0) {
+    throw new Error('Invalid Xml Data');
   }
 
   const parsed = {

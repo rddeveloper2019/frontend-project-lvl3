@@ -10,12 +10,13 @@ const initialState = {
     message: null,
   },
   feedsStore: {
-    activeFeedId: '',
     feeds: [],
   },
   postsStore: {
     posts: [],
   },
+  autoRefresh: 'on',
+
   UI: {
     visitedPostsIDs: [],
   },

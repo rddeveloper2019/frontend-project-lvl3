@@ -17,7 +17,6 @@ const stateHandlers = (state) => {
   const handleFeedsStore = (payload) => {
     const { feeds } = onChange.target(state.feedsStore);
     const newStore = {
-      activeFeedId: payload.id,
       feeds: [payload, ...feeds],
     };
     state.feedsStore = newStore;
@@ -48,9 +47,9 @@ const stateHandlers = (state) => {
           title, description, id, url,
         });
         handlePostsStore(items);
-        handleFormState({ status: 'ready', message: [`${i18n.t('form.feedback.success')}`] });
+        handleFormState({ status: 'ready', message: [`${i18n.t('form.feedback.success')}`], inputValue: '' });
       }).catch((err) => {
-        handleFormState({ status: 'error', message: [`${i18n.t('form.feedback.fetchError')}`] });
+        handleFormState({ status: 'error', message: [`${i18n.t(`form.feedback.fetchErrors.${err.message}`)}`] });
         throw new Error(err);
       });
   };
@@ -70,22 +69,22 @@ const stateHandlers = (state) => {
       });
   };
 
-  const autoUpdate = (mode = 'off') => {
-    const { feedsStore, form } = onChange.target(state);
+  const autoUpdate = () => {
+    const { feedsStore, form, autoRefresh } = onChange.target(state);
     const { feeds } = feedsStore;
 
     let needUpdate;
 
-    if (mode === 'on' && feeds.length > 0) {
+    if (autoRefresh === 'on' && feeds.length > 0) {
       needUpdate = form.status === 'ready' || form.status === 'error';
     }
 
     setTimeout(() => {
       if (needUpdate) {
         autoFetch(feeds);
-        autoUpdate('on');
+        autoUpdate();
       } else {
-        autoUpdate('on');
+        autoUpdate();
       }
     }, 5000);
   };

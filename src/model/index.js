@@ -21,7 +21,7 @@ const model = (initialState, elements) => {
   };
   const utilities = { getCurrentState, getPostData };
 
-  autoUpdate('on');
+  autoUpdate();
   return { state, handlers, utilities };
 };
 

@@ -2,17 +2,11 @@
 import * as yup from 'yup';
 import i18n from '../locales';
 
-yup.setLocale({
-  string: {
-    url: i18n.t('form.feedback.invalidUrl'),
-  },
-  mixed: {
-    default: 'неизвестная ошибка',
-  },
-});
-
 const schema = yup.object().shape({
-  value: yup.string().url().required(),
+  value: yup.string()
+    .url(i18n.t('form.feedback.invalidUrl'))
+    .required(i18n.t('form.feedback.valueRequired'))
+    .nullable(),
 });
 
 const validateInput = (value) => new Promise((resolve) => {
@@ -72,7 +66,7 @@ const controller = (elements, handlers, utilities) => {
       } else {
         handleFormState({ status: 'error', message: [`${i18n.t('form.feedback.duplicatedURL')}`] });
       }
-    }).catch((err) => console.log(err));
+    }).catch((err) => console.error(err));
   });
 
   postsContainer.addEventListener('click', (e) => {
