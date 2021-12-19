@@ -23,7 +23,7 @@ const createElement = (options = {}, elements = []) => {
       newElement.setAttribute(attrName, attrValue);
     });
   }
-  console.log(newElement);
+
   return newElement;
 };
 
@@ -46,8 +46,10 @@ const createBootstrapForm = () => {
   });
 
   const label = createElement({ tagName: 'label', textContent: 'Ссылка RSS', attributes: { for: 'url-input' } });
-  const inputAndLabelDiv = createElement({ classes: ['col'] },
-    [createElement({ classes: ['form-floating'] }, [input, label])]);
+  const inputAndLabelDiv = createElement(
+    { classes: ['col'] },
+    [createElement({ classes: ['form-floating'] }, [input, label])],
+  );
 
   const addBtn = createElement({
     tagName: 'button',
