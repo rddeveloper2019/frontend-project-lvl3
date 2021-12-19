@@ -11,6 +11,7 @@ const renderFunctions = (i18n) => {
     formFeedbackEl.textContent = '';
     input.classList.remove('is-invalid');
     addBtn.removeAttribute('disabled');
+    input.removeAttribute('readonly');
   };
 
   const renderForm = (formContainer, flag, message) => {
@@ -44,6 +45,7 @@ const renderFunctions = (i18n) => {
 
       case 'sending': {
         addBtn.disabled = true;
+        input.setAttribute('readonly', 'readonly');
       }
         break;
       case 'error': {
