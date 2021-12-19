@@ -1,144 +1,84 @@
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RSS Aggregator</title>
-    <link
-      rel="icon"
-      href="https://raw.githubusercontent.com/rddeveloper2019/publicfiles/main/rss%20aggregator/favicon_rss_grey.png"
-      type="image/x-icon"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cairo&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <body class="d-flex flex-column min-vh-100">
-      <div
-        class="modal fade"
-        id="modal"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="modal"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title text-dark"></h5>
-              <button
-                type="button"
-                class="btn-close close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body"></div>
-            <div class="modal-footer">
-              <a
-                class="btn btn-outline-dark full-article"
-                data-more-link
-                href="#"
-                role="button"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Читать полностью </a
-              ><button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Закрыть
-              </button>
-            </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RSS Aggregator</title>
+  <link rel="icon"
+    href="https://raw.githubusercontent.com/rddeveloper2019/publicfiles/main/rss%20aggregator/favicon_rss_grey.png"
+    type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+
+  <body class="d-flex flex-column min-vh-100">
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-dark"></h5>
+            <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <a class="btn btn-outline-dark full-article" data-more-link href="#" role="button" target="_blank"
+              rel="noopener noreferrer">Читать полностью </a><button type="button" class="btn btn-secondary"
+              data-bs-dismiss="modal">
+              Закрыть
+            </button>
           </div>
         </div>
       </div>
-      <main class="flex-grow-1">
-        <section class="container-fluid bg-dark p-5 form-container">
-          <div class="row">
-            <div class="col-md-10 col-lg-8 mx-auto text-white">
-              <h1 class="display-3 mb-0">RSS агрегатор</h1>
+    </div>
+    <main class="flex-grow-1">
+      <section class="container-fluid bg-dark p-5 form-container">
+        <div class="row">
+          <div class="col-md-10 col-lg-8 mx-auto text-white">
+            <h1 class="display-3 mb-0">RSS агрегатор</h1>
 
-              <div class="shadow p-3 mb-1 rounded lead">
-                <p>Без лишних виджетов, баннеров и рекламы!</p>
-                <p>Экономь своё время — все новости на одной странице!</p>
-              </div>
-              <form action="" class="rss-form text-body">
-                <!-- <div class="row">
-                  <div class="col">
-                    <div class="form-floating">
-                      <input
-                        id="url-input"
-                        autofocus=""
-                        name="url"
-                        aria-label="url"
-                        class="form-control w-100"
-                        placeholder="ссылка RSS"
-                        autocomplete="off"
-                      />
-                      <label for="url-input">Ссылка RSS</label>
-                    </div>
-                  </div>
-                  <div class="col-auto">
-                    <button
-                      type="submit"
-                      aria-label="add"
-                      class="h-100 btn btn-lg btn-dark px-sm-5 border border-light"
-                      id="add-feed-button"
-                    >
-                      Добавить
-                    </button>
-                  </div>
-                </div> -->
-              </form>
-              <p class="mt-2 mb-0 text-muted">
-                Пример: https://ru.hexlet.io/lessons.rss
-              </p>
-              <p class="mt-2 mb-0 text-muted">
-                Пример: http://lenta.ru/rss/news
-              </p>
-              <p class="feedback m-0 position-absolute small" id="feedback"></p>
+            <div class="shadow p-3 mb-1 rounded lead">
+              <p>Без лишних виджетов, баннеров и рекламы!</p>
+              <p>Экономь своё время — все новости на одной странице!</p>
             </div>
-          </div>
-        </section>
+            <div id="root-form"></div>
 
-        <!-- <button id="current-state" type="button" class="btn btn-danger">
+            <p class="mt-2 mb-0 text-muted">
+              Пример: https://ru.hexlet.io/lessons.rss
+            </p>
+            <p class="mt-2 mb-0 text-muted">
+              Пример: http://lenta.ru/rss/news
+            </p>
+            <p class="feedback m-0 position-absolute small"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- <button id="current-state" type="button" class="btn btn-danger">
           CurrentState
         </button> -->
 
-        <section class="container-fluid container-xxl p-5">
-          <div class="row">
-            <div class="col-md-10 col-lg-8 order-1 mx-auto posts"></div>
-            <div
-              class="col-md-10 col-lg-4 mx-auto order-0 order-lg-1 feeds"
-            ></div>
-          </div>
-        </section>
-      </main>
-      <footer class="footer border-top py-3 mt-5 bg-light">
-        <div class="container-xl d-flex justify-content-between">
-          <div class="text-center">
-            created by
-            <a
-              href="https://ru.hexlet.io/professions/frontend/projects/11"
-              target="_blank"
-              >Hexlet</a
-            >
-          </div>
-          <div class="text-center">
-            <a
-              href="https://github.com/rddeveloper2019/frontend-project-lvl3"
-              target="_blank"
-              >Github</a
-            >
-          </div>
+      <section class="container-fluid container-xxl p-5">
+        <div class="row">
+          <div class="col-md-10 col-lg-8 order-1 mx-auto posts"></div>
+          <div class="col-md-10 col-lg-4 mx-auto order-0 order-lg-1 feeds"></div>
         </div>
-      </footer>
-    </body>
+    </main>
+    <footer class="footer border-top py-3 mt-5 bg-light">
+      <div class="container-xl d-flex justify-content-between">
+        <div class="text-center">
+          created by
+          <a href="https://ru.hexlet.io/professions/frontend/projects/11" target="_blank">Hexlet</a>
+        </div>
+        <div class="text-center">
+          <a href="https://github.com/rddeveloper2019/frontend-project-lvl3" target="_blank">Github</a>
+        </div>
+      </div>
+    </footer>
   </body>
+</body>
+
 </html>
