@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const allOriginsAPIUrl = 'https://hhexlet-allorigins.herokuapp.com/get?disableCache=true&charset=utf-8&url=';
+const allOriginsAPIUrl = 'https://hexlet-allorigins.herokuapp.com/get?disableCache=true&charset=utf-8&url=';
 
 const generateUrl = (url) => `${allOriginsAPIUrl}${`${url}`}`;
 
