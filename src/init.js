@@ -22,8 +22,8 @@ const initialState = {
 };
 
 const form = document.querySelector('form');
-const input = form.elements.url;
-const addBtn = form.elements['add-feed-button'];
+const input = document.querySelector('#url-input');
+const addBtn = document.querySelector('#add-feed-button');
 const formFeedbackEl = document.querySelector('.feedback');
 
 const postsContainer = document.querySelector('.posts');
