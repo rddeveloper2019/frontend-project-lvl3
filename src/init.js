@@ -22,7 +22,7 @@ const initialState = {
 };
 
 const form = document.querySelector('form');
-const input = form.elements['url-input'];
+const input = form.elements.url;
 const addBtn = form.elements['add-feed-button'];
 const formFeedbackEl = document.querySelector('.feedback');
 
