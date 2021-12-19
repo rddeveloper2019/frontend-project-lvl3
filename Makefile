@@ -20,3 +20,8 @@ lint:
 	npx eslint .
 
 .PHONY: test
+
+add:
+	git add .
+commit:
+	git commit -m'$RANDOM'
