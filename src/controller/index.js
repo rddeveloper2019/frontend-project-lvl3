@@ -20,19 +20,21 @@ const elementsEventsController = (elements, { UiHandlers }, { getPostData }, pos
     postsContainer,
   } = elements;
 
-  const viewPostButtons = posts.map((post) => document.querySelector(`button[data-id=${post.id}]`));
-  viewPostButtons.forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      if (e.target.tagName === 'BUTTON') {
-        const dataId = e.target.dataset.id;
-        const { title, description, link: postLink } = getPostData(dataId);
-        addVisitedPostId(dataId);
-        modalTitle.textContent = title;
-        modalBody.textContent = description;
-        modalReadMoreLink.setAttribute('href', postLink);
-      }
-    });
-  });
+  // const viewPostButtons = posts.map((post) => document.querySelector(`button[data-id=${post.id}]`));
+  // viewPostButtons.forEach((btn) => {
+  //   btn.addEventListener('click', (e) => {
+  //     console.log(e.target);
+  //     if (e.target.tagName === 'BUTTON' || e.target.tagName === 'LI') {
+  //       console.log(e.target);
+  //       const dataId = e.target.dataset.id;
+  //       const { title, description, link: postLink } = getPostData(dataId);
+  //       addVisitedPostId(dataId);
+  //       modalTitle.textContent = title;
+  //       modalBody.textContent = description;
+  //       modalReadMoreLink.setAttribute('href', postLink);
+  //     }
+  //   });
+  // });
 
   postsContainer.addEventListener('click', (e) => {
     const dataId = e.target.dataset.id;
@@ -40,6 +42,16 @@ const elementsEventsController = (elements, { UiHandlers }, { getPostData }, pos
 
     if (e.target === link) {
       addVisitedPostId(dataId);
+    }
+
+    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'LI') {
+      console.log(e.target);
+      // const dataId = e.target.dataset.id;
+      const { title, description, link: postLink } = getPostData(dataId);
+      addVisitedPostId(dataId);
+      modalTitle.textContent = title;
+      modalBody.textContent = description;
+      modalReadMoreLink.setAttribute('href', postLink);
     }
   });
 };
