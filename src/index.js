@@ -6,4 +6,8 @@ import init from './init.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 
-init();
+const app = () => {
+  init();
+};
+app();
+export default app;
