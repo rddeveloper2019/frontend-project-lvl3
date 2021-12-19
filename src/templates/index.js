@@ -42,6 +42,7 @@ const createBootstrapForm = () => {
       'aria-label': 'url',
       placeholder: 'ссылка RSS',
       autocomplete: 'off',
+      required: '',
     },
   });
 
