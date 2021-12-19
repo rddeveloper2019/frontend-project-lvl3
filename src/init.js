@@ -48,6 +48,7 @@ const init = () => {
       feedsContainer,
 
     };
+    console.log(elements);
 
     const { handlers, utilities } = model(initialState, elements);
     controller(elements, handlers, utilities);

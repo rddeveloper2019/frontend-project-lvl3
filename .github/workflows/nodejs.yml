@@ -35,6 +35,7 @@ jobs:
         run: |
           make install
           make build
+          make pwd
         # Add environment variables
         env:
           CI: true
