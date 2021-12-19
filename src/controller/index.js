@@ -40,7 +40,7 @@ const controller = (elements, handlers, utilities) => {
     modalBody, modalTitle, modalReadMoreLink,
   } = elements.modalContainer;
 
-  input.focus();
+  // input.focus();
 
   input.addEventListener('input', (e) => {
     const { value } = e.target;
