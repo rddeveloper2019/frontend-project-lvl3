@@ -30,15 +30,15 @@ const controller = (elements, handlers, utilities) => {
   const { handleFormState, fetchRSSFeeds, UiHandlers } = handlers;
   const { getCurrentState, getPostData } = utilities;
   const { addVisitedPostId } = UiHandlers;
-  const { form, input } = elements.form;
+  const { form, input } = elements.formContainer;
 
   const {
     postsContainer,
-  } = elements.post;
+  } = elements;
 
   const {
     modalBody, modalTitle, modalReadMoreLink,
-  } = elements.modalEl;
+  } = elements.modalContainer;
 
   input.focus();
 
@@ -52,7 +52,7 @@ const controller = (elements, handlers, utilities) => {
 
     handleFormState({ status: 'sending' });
 
-    const { inputValue } = getCurrentState('form');
+    const { inputValue } = getCurrentState('formState');
     const { feeds } = getCurrentState('feedsStore');
 
     validateInput(inputValue).then((errorData) => {
@@ -70,9 +70,8 @@ const controller = (elements, handlers, utilities) => {
   });
 
   postsContainer.addEventListener('click', (e) => {
-    // e.preventDefault();
     const dataId = e.target.dataset.id;
-    // const postElement = document.querySelector(`li[data-id=${dataId}]`);
+
     const link = document.querySelector(`a[data-id=${dataId}]`);
     const button = document.querySelector(`button[data-id=${dataId}]`);
 

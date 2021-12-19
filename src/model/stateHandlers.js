@@ -6,12 +6,8 @@ import HTMLparse from '../services/HTMLparse';
 
 const stateHandlers = (state) => {
   const handleFormState = (payload = {}) => {
-    state.form = { ...state.form, ...payload };
-  };
-
-  const handleFeedState = (payload) => {
-    const { feeds } = state.feed;
-    state.feed.feeds = [...feeds, payload.feed];
+    const { formState } = onChange.target(state);
+    state.formState = { ...formState, ...payload };
   };
 
   const handleFeedsStore = (payload) => {
@@ -29,10 +25,6 @@ const stateHandlers = (state) => {
 
   const handlePostsStore = (newPosts) => {
     const { posts } = onChange.target(state.postsStore);
-    if (newPosts.length > 20) {
-      // eslint-disable-next-line no-param-reassign
-      newPosts.length = 20;
-    }
     state.postsStore = { posts: [...getNewUniquePosts(posts, newPosts), ...posts] };
   };
 
@@ -70,13 +62,13 @@ const stateHandlers = (state) => {
   };
 
   const autoUpdate = () => {
-    const { feedsStore, form, autoRefresh } = onChange.target(state);
+    const { feedsStore, formState, autoRefresh } = onChange.target(state);
     const { feeds } = feedsStore;
 
     let needUpdate;
 
     if (autoRefresh === 'on' && feeds.length > 0) {
-      needUpdate = form.status === 'ready' || form.status === 'error';
+      needUpdate = formState.status === 'ready' || formState.status === 'error';
     }
 
     setTimeout(() => {
@@ -90,7 +82,7 @@ const stateHandlers = (state) => {
   };
 
   return {
-    handleFormState, handleFeedState, handleFeedsStore, handlePostsStore, fetchRSSFeeds, autoUpdate,
+    handleFormState, handleFeedsStore, handlePostsStore, fetchRSSFeeds, autoUpdate,
   };
 };
 

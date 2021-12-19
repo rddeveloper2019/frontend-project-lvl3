@@ -1,10 +1,10 @@
 /* eslint-disable no-lone-blocks */
 import i18n from '../locales';
 
-const clearForm = (elements) => {
+const clearForm = (formContainer) => {
   const {
     input, formFeedbackEl, addBtn,
-  } = elements;
+  } = formContainer;
 
   formFeedbackEl.classList.remove('text-success');
   formFeedbackEl.classList.remove('text-danger');
@@ -13,20 +13,19 @@ const clearForm = (elements) => {
   addBtn.removeAttribute('disabled');
 };
 
-const renderForm = (elements, flag, message) => {
+const renderForm = (formContainer, flag, message) => {
   const classes = {
     ready: 'text-success',
     editing: 'text-success',
     error: 'text-danger',
   };
-
   const {
     form,
     input, formFeedbackEl, addBtn,
-  } = elements;
+  } = formContainer;
 
   if (flag !== 'editing') {
-    clearForm(elements);
+    clearForm(formContainer);
   }
 
   switch (flag) {
@@ -57,18 +56,19 @@ const renderForm = (elements, flag, message) => {
   }
 };
 
-const addVisitedPost = (elements, data) => {
+const addVisitedPost = (postsContainer, data) => {
   const selector = data[data.length - 1];
-  const visitedPostEl = elements.postsContainer.querySelector(`a[data-id=${selector}]`);
+  const visitedPostEl = postsContainer.querySelector(`a[data-id=${selector}]`);
+
   visitedPostEl.classList.remove('fw-bold');
   visitedPostEl.classList.remove('link-dark');
   visitedPostEl.classList.add('fw-normal');
   visitedPostEl.classList.add('link-secondary');
 };
 
-const renderPosts = (elements, data) => {
+const renderPosts = (elementsContainer, data) => {
   const { posts } = data;
-  const { postsContainer } = elements;
+  const postsContainer = elementsContainer;
   const postsEl = document.createElement('div');
   postsEl.classList.add('card', 'border-0');
 
@@ -93,9 +93,9 @@ const renderPosts = (elements, data) => {
   postsContainer.append(postsEl);
 };
 
-const renderFeeds = (elements, data) => {
+const renderFeeds = (elementsContainer, data) => {
   const { feeds } = data;
-  const { feedsContainer } = elements;
+  const feedsContainer = elementsContainer;
   const feedsEl = document.createElement('div');
   feedsEl.classList.add('card', 'border-0');
 

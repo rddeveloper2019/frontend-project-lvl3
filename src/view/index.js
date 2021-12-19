@@ -4,33 +4,34 @@ const {
   renderForm, renderFeeds, renderPosts, addVisitedPost,
 } = renderers;
 
-const renderFormByStatus = (elements, path, value) => {
+const switchFormByStatus = (elements, path, value) => {
   const { status, message } = value;
 
   const renderBy = {
-    editing: () => { renderForm(elements.form, status); },
-    sending: () => { renderForm(elements.form, status); },
-    error: () => { renderForm(elements.form, status, message); },
-    ready: () => { renderForm(elements.form, status, message); },
+    editing: () => { renderForm(elements, status); },
+    sending: () => { renderForm(elements, status); },
+    error: () => { renderForm(elements, status, message); },
+    ready: () => { renderForm(elements, status, message); },
   };
   renderBy[status]();
 };
 
 const app = (elements) => (path, value) => {
-  if (path === 'form') {
-    renderFormByStatus(elements, path, value);
+  console.log(path);
+  if (path === 'form' || path === 'formState') {
+    switchFormByStatus(elements.formContainer, path, value);
   } else {
     switch (path) {
       case 'feedsStore':
-        renderFeeds(elements.feed, value);
+        renderFeeds(elements.feedsContainer, value);
         break;
 
       case 'postsStore':
-        renderPosts(elements.post, value);
+        renderPosts(elements.postsContainer, value);
         break;
 
       case 'UI.visitedPostsIDs':
-        addVisitedPost(elements.post, value);
+        addVisitedPost(elements.postsContainer, value);
         break;
 
       default:
@@ -40,4 +41,4 @@ const app = (elements) => (path, value) => {
   }
 };
 
-export default { app };
+export default app;

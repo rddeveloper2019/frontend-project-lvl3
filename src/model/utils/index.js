@@ -1,9 +1,15 @@
 import onChange from 'on-change';
 
 const utils = (state) => {
-  const getCurrentState = (field = null) => {
+  const getCurrentState = (field = null, subField = null) => {
     const currentState = onChange.target(state);
-    return field ? currentState[field] : currentState;
+    if (!field) {
+      return currentState;
+    }
+    if (!subField) {
+      return currentState[field];
+    }
+    return currentState[field][subField];
   };
 
   const getPostData = (id, selector = 'all') => {

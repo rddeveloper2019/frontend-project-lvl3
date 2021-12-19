@@ -4,50 +4,48 @@ import controller from './controller';
 import model from './model';
 
 const initialState = {
-  form: {
+  formState: {
     status: 'ready',
     inputValue: null,
     message: null,
   },
+
   feedsStore: {
     feeds: [],
   },
   postsStore: {
     posts: [],
   },
-  autoRefresh: 'on',
 
   UI: {
     visitedPostsIDs: [],
   },
+  autoRefresh: 'on',
 };
 
 const form = document.querySelector('form');
 const input = form.elements['url-input'];
 const addBtn = form.elements['add-feed-button'];
 const formFeedbackEl = document.querySelector('.feedback');
+
 const postsContainer = document.querySelector('.posts');
-const posts = postsContainer.querySelectorAll('li');
 const feedsContainer = document.querySelector('.feeds');
-const feeds = feedsContainer.querySelectorAll('li');
+
 const modal = document.querySelector('#modal');
 const modalBody = modal.querySelector('.modal-body');
 const modalTitle = modal.querySelector('.modal-title');
 const modalReadMoreLink = modal.querySelector('[data-more-link]');
 
 const elements = {
-  form: {
+
+  formContainer: {
     form, input, addBtn, formFeedbackEl,
   },
-  post: {
-    postsContainer, posts,
-  },
-  feed: {
-    feedsContainer, feeds,
-  },
-  modalEl: {
+  modalContainer: {
     modal, modalBody, modalTitle, modalReadMoreLink,
   },
+  postsContainer,
+  feedsContainer,
 
 };
 

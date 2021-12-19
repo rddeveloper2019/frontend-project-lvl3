@@ -25,7 +25,7 @@ const ru = {
 };
 
 i18n.init({
-  lng: 'ru', // if you're using a language detector, do not define the lng option
+  lng: 'ru',
   debug: true,
   resources: {
     ru,
