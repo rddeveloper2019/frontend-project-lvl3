@@ -17,8 +17,7 @@ const switchFormByStatus = (elements, path, value) => {
 };
 
 const app = (elements) => (path, value) => {
-  console.log(path);
-  if (path === 'form' || path === 'formState') {
+  if (path === 'formState') {
     switchFormByStatus(elements.formContainer, path, value);
   } else {
     switch (path) {

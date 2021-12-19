@@ -1,4 +1,5 @@
 /node_modules/
+/ownFiles/
 *.log
 dist
 assets

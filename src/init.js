@@ -1,5 +1,3 @@
-import onChange from 'on-change';
-
 import controller from './controller';
 import model from './model';
 
@@ -52,19 +50,6 @@ const elements = {
 const init = () => {
   const { state, handlers, utilities } = model(initialState, elements);
   controller(elements, handlers, utilities);
-
-  //! remove
-
-  document.querySelector('#current-state').addEventListener('click', () => {
-    console.log(onChange.target(state));
-  });
-
-  form.parentElement.querySelectorAll('p.text-muted').forEach((p) => {
-    p.addEventListener('click', (e) => {
-      const text = e.target.textContent.split('Пример: ')[1].trim();
-      input.value = `${text} `;
-    });
-  });
 };
 
 export default init;
