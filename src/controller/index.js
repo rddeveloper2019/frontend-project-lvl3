@@ -104,7 +104,8 @@ const controller = (elements, handlers, utilities) => {
 
     handleFormState({ status: 'sending' });
 
-    const { inputValue } = getCurrentState('formState');
+    // const { inputValue } = getCurrentState('formState');
+    const inputValue = input.value;
     const { feeds } = getCurrentState('feedsStore');
 
     validateInput(inputValue).then((errorData) => {
