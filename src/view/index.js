@@ -1,28 +1,28 @@
 import renderers from './renderers';
 
-const {
-  renderForm, renderFeeds, renderPosts, addVisitedPost,
-} = renderers;
-
-const switchFormByStatus = (elements, path, value) => {
+const switchFormByStatus = (elements, cb, value) => {
   const { status, message } = value;
 
   const renderBy = {
-    editing: () => { renderForm(elements, status); },
-    sending: () => { renderForm(elements, status); },
-    error: () => { renderForm(elements, status, message); },
-    ready: () => { renderForm(elements, status, message); },
+    editing: () => { cb(elements, status); },
+    sending: () => { cb(elements, status); },
+    error: () => { cb(elements, status, message); },
+    ready: () => { cb(elements, status, message); },
   };
   renderBy[status]();
 };
 
-const app = (elements) => (path, value) => {
-  console.log('view');
-  console.log(path);
-  console.log(value);
+const view = (elements, i18n) => (path, value) => {
+  // console.log('view');
+  // console.log(path);
+  // console.log(value);
+
+  const {
+    renderForm, renderFeeds, renderPosts, addVisitedPost,
+  } = renderers(i18n);
 
   if (path === 'formState') {
-    switchFormByStatus(elements.formContainer, path, value);
+    switchFormByStatus(elements.formContainer, renderForm, value);
   } else {
     switch (path) {
       case 'feedsStore':
@@ -44,4 +44,4 @@ const app = (elements) => (path, value) => {
   }
 };
 
-export default app;
+export default view;

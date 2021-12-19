@@ -10,69 +10,47 @@ const isUrlUnique = (feeds, url) => {
   return feeds.every((item) => item.url !== url);
 };
 
-const postsController = (elements, handlers, utilities, posts) => {
-  const {
-    handleFormState, fetchRSSFeeds, UiHandlers, handleFeedsStore, handlePostsStore,
-  } = handlers;
-  const { getCurrentState, getPostData } = utilities;
+const elementsEventsController = (elements, { UiHandlers }, { getPostData }, posts) => {
   const { addVisitedPostId } = UiHandlers;
   const {
     modalBody, modalTitle, modalReadMoreLink,
   } = elements.modalContainer;
+
   const {
     postsContainer,
   } = elements;
 
-  // const viewPostButtons = posts.map((post) => document.querySelector(`button[data-id=${post.id}]`));
-  // viewPostButtons.forEach((btn) => {
-  //   btn.addEventListener('click', (e) => {
-  //     if (e.target.tagName === 'BUTTON') {
-  //       const dataId = e.target.dataset.id;
-  //       const { title, description, link: postLink } = getPostData(dataId);
-  //       addVisitedPostId(dataId);
-  //       modalTitle.textContent = title;
-  //       modalBody.textContent = description;
-  //       modalReadMoreLink.setAttribute('href', postLink);
-  //     }
-  //   });
-  // });
+  const viewPostButtons = posts.map((post) => document.querySelector(`button[data-id=${post.id}]`));
+  viewPostButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      if (e.target.tagName === 'BUTTON') {
+        const dataId = e.target.dataset.id;
+        const { title, description, link: postLink } = getPostData(dataId);
+        addVisitedPostId(dataId);
+        modalTitle.textContent = title;
+        modalBody.textContent = description;
+        modalReadMoreLink.setAttribute('href', postLink);
+      }
+    });
+  });
 
   postsContainer.addEventListener('click', (e) => {
     const dataId = e.target.dataset.id;
-
     const link = document.querySelector(`a[data-id=${dataId}]`);
-    const button = document.querySelector(`button[data-id=${dataId}]`);
 
     if (e.target === link) {
       addVisitedPostId(dataId);
     }
-    if (e.target === button) {
-      // const dataId = e.target.dataset.id;
-      const { title, description, link: postLink } = getPostData(dataId);
-      addVisitedPostId(dataId);
-      modalTitle.textContent = title;
-      modalBody.textContent = description;
-      modalReadMoreLink.setAttribute('href', postLink);
-    }
   });
-  // });
 };
 
 const controller = (elements, handlers, utilities, i18n) => {
   const {
-    handleFormState, UiHandlers, handleFeedsStore, handlePostsStore,
+    handleFormState, handleFeedsStore, handlePostsStore,
   } = handlers;
-  const { getCurrentState, getPostData } = utilities;
-  const { addVisitedPostId } = UiHandlers;
+  const { getCurrentState } = utilities;
+
   const { form, input } = elements.formContainer;
-
-  const {
-    postsContainer,
-  } = elements;
-
-  const {
-    modalBody, modalTitle, modalReadMoreLink,
-  } = elements.modalContainer;
 
   const schema = yup.object().shape({
     value: yup.string()
@@ -92,7 +70,7 @@ const controller = (elements, handlers, utilities, i18n) => {
   });
 
   input.focus();
-
+  console.log(form);
   input.addEventListener('input', (e) => {
     const { value } = e.target;
     handleFormState({ status: 'editing', inputValue: value });
@@ -103,7 +81,6 @@ const controller = (elements, handlers, utilities, i18n) => {
 
     handleFormState({ status: 'sending' });
 
-    // const { inputValue } = getCurrentState('formState');
     const inputValue = input.value;
     const { feeds } = getCurrentState('feedsStore');
 
@@ -114,7 +91,6 @@ const controller = (elements, handlers, utilities, i18n) => {
       }
 
       if (isUrlUnique(feeds, inputValue)) {
-        // fetchRSSFeeds(inputValue);
         fetchRSS(inputValue).then(({ data }) => HTMLparse(data.contents))
           .then((parsed) => {
             const {
@@ -126,7 +102,7 @@ const controller = (elements, handlers, utilities, i18n) => {
             });
             handlePostsStore(items);
             handleFormState({ status: 'ready', message: [`${i18n.t('form.feedback.success')}`], inputValue: '' });
-            postsController(elements, handlers, utilities, items);
+            elementsEventsController(elements, handlers, utilities, items);
           }).catch((err) => {
             handleFormState({ status: 'error', message: [`${i18n.t(`form.feedback.fetchErrors.${err.message}`)}`] });
             throw new Error(err);
