@@ -104,7 +104,13 @@ const controller = (elements, handlers, utilities, i18n) => {
             handleFormState({ status: 'ready', message: [`${i18n.t('form.feedback.success')}`], inputValue: '' });
             elementsEventsController(elements, handlers, utilities, items);
           }).catch((err) => {
-            const errorMessage = err === 'Invalid Xml Data' ? ' Invalid Xml Data' : 'Network Error';
+            let errorMessage;
+
+            if (err.message) {
+              errorMessage = err.message === 'Invalid Xml Data' ? err.message : 'Network Error';
+            } else {
+              errorMessage = 'Network Error';
+            }
 
             handleFormState({ status: 'error', message: [`${i18n.t(`form.feedback.fetchErrors.${errorMessage}`)}`] });
           });
