@@ -1,25 +1,7 @@
 /* eslint-disable no-param-reassign */
 import * as yup from 'yup';
-import i18n from '../locales';
 import fetchRSS from '../services/fetchRSS';
 import HTMLparse from '../services/HTMLparse';
-
-const schema = yup.object().shape({
-  value: yup.string()
-    .url(i18n.t('form.feedback.invalidUrl'))
-    .required(i18n.t('form.feedback.valueRequired'))
-    .nullable(),
-});
-
-const validateInput = (value) => new Promise((resolve) => {
-  resolve(schema.validate({ value }));
-}).then(() => '').catch((err) => {
-  const error = err.errors;
-  if (error.length > 0) {
-    return error;
-  }
-  return '';
-});
 
 const isUrlUnique = (feeds, url) => {
   if (feeds.length === 0) {
@@ -76,9 +58,9 @@ const postsController = (elements, handlers, utilities, posts) => {
   // });
 };
 
-const controller = (elements, handlers, utilities) => {
+const controller = (elements, handlers, utilities, i18n) => {
   const {
-    handleFormState, fetchRSSFeeds, UiHandlers, handleFeedsStore, handlePostsStore,
+    handleFormState, UiHandlers, handleFeedsStore, handlePostsStore,
   } = handlers;
   const { getCurrentState, getPostData } = utilities;
   const { addVisitedPostId } = UiHandlers;
@@ -91,6 +73,23 @@ const controller = (elements, handlers, utilities) => {
   const {
     modalBody, modalTitle, modalReadMoreLink,
   } = elements.modalContainer;
+
+  const schema = yup.object().shape({
+    value: yup.string()
+      .url(i18n.t('form.feedback.invalidUrl'))
+      .required(i18n.t('form.feedback.valueRequired'))
+      .nullable(),
+  });
+
+  const validateInput = (value) => new Promise((resolve) => {
+    resolve(schema.validate({ value }));
+  }).then(() => '').catch((err) => {
+    const error = err.errors;
+    if (error.length > 0) {
+      return error;
+    }
+    return '';
+  });
 
   input.focus();
 

@@ -1,4 +1,4 @@
-import i18n from 'i18next';
+import i18next from 'i18next';
 
 const ru = {
   translation: {
@@ -24,6 +24,7 @@ const ru = {
   },
 };
 
+const i18n = i18next.createInstance();
 i18n.init({
   lng: 'ru',
   debug: true,

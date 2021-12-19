@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import onChange from 'on-change';
-import i18n from '../locales';
+// import i18n from '../locales';
 import fetchRSS from '../services/fetchRSS';
 import HTMLparse from '../services/HTMLparse';
 
@@ -29,23 +29,23 @@ const stateHandlers = (state) => {
     state.postsStore = { posts: updatedPosts };
   };
 
-  const fetchRSSFeeds = (url) => {
-    fetchRSS(url).then(({ data }) => HTMLparse(data.contents))
-      .then((parsed) => {
-        const {
-          title, description, id, items,
-        } = parsed.channel;
+  // const fetchRSSFeeds = (url) => {
+  //   fetchRSS(url).then(({ data }) => HTMLparse(data.contents))
+  //     .then((parsed) => {
+  //       const {
+  //         title, description, id, items,
+  //       } = parsed.channel;
 
-        handleFeedsStore({
-          title, description, id, url,
-        });
-        handlePostsStore(items);
-        handleFormState({ status: 'ready', message: [`${i18n.t('form.feedback.success')}`], inputValue: '' });
-      }).catch((err) => {
-        handleFormState({ status: 'error', message: [`${i18n.t(`form.feedback.fetchErrors.${err.message}`)}`] });
-        throw new Error(err);
-      });
-  };
+  //       handleFeedsStore({
+  //         title, description, id, url,
+  //       });
+  //       handlePostsStore(items);
+  //       handleFormState({ status: 'ready', message: [`${i18n.t('form.feedback.success')}`], inputValue: '' });
+  //     }).catch((err) => {
+  //       handleFormState({ status: 'error', message: [`${i18n.t(`form.feedback.fetchErrors.${err.message}`)}`] });
+  //       throw new Error(err);
+  //     });
+  // };
 
   const autoFetch = (feeds) => {
     const fetches = feeds.map((feed) => Promise.resolve(fetchRSS(feed.url, 'auto')));
@@ -83,7 +83,7 @@ const stateHandlers = (state) => {
   };
 
   return {
-    handleFormState, handleFeedsStore, handlePostsStore, fetchRSSFeeds, autoUpdate,
+    handleFormState, handleFeedsStore, handlePostsStore, autoUpdate,
   };
 };
 

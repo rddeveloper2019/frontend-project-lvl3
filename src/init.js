@@ -1,6 +1,7 @@
 import onChange from 'on-change';
 import controller from './controller';
 import model from './model';
+import i18n from './locales';
 
 const init = () => {
   document.addEventListener('DOMContentLoaded', () => {
@@ -52,8 +53,8 @@ const init = () => {
     };
     console.log(elements);
 
-    const { handlers, utilities, state } = model(initialState, elements);
-    controller(elements, handlers, utilities);
+    const { handlers, utilities, state } = model(initialState, i18n, elements);
+    controller(elements, handlers, utilities, i18n);
 
     //! remove
 
