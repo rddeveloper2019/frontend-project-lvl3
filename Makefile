@@ -1,3 +1,5 @@
+
+
 develop:
 	npx webpack serve
 
@@ -24,5 +26,5 @@ lint:
 add:
 	git add .
 commit:
+	git commit -m 'random'
 
-	git commit -m '$${RANDOM}'
