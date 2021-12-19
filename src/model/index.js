@@ -8,7 +8,7 @@ const model = (initialState, elements) => {
   const state = onChange(initialState, app(elements));
 
   const {
-    handleFormState, fetchRSSFeeds, autoUpdate,
+    handleFormState, fetchRSSFeeds, autoUpdate, handleFeedsStore, handlePostsStore,
   } = stateHandlers(state);
   const { addVisitedPostId } = UiStateHandlers(state);
   const { getCurrentState, getPostData } = utils(state);
@@ -16,7 +16,7 @@ const model = (initialState, elements) => {
   return {
     state,
     handlers: {
-      handleFormState, fetchRSSFeeds, UiHandlers: { addVisitedPostId },
+      handleFormState, fetchRSSFeeds, handleFeedsStore, handlePostsStore, UiHandlers: { addVisitedPostId },
     },
     utilities: { getCurrentState, getPostData },
   };

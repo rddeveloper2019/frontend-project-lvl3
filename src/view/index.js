@@ -17,6 +17,10 @@ const switchFormByStatus = (elements, path, value) => {
 };
 
 const app = (elements) => (path, value) => {
+  console.log('view');
+  console.log(path);
+  console.log(value);
+
   if (path === 'formState') {
     switchFormByStatus(elements.formContainer, path, value);
   } else {

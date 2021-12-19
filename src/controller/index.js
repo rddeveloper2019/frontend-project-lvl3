@@ -1,6 +1,8 @@
 /* eslint-disable no-param-reassign */
 import * as yup from 'yup';
 import i18n from '../locales';
+import fetchRSS from '../services/fetchRSS';
+import HTMLparse from '../services/HTMLparse';
 
 const schema = yup.object().shape({
   value: yup.string()
@@ -26,8 +28,58 @@ const isUrlUnique = (feeds, url) => {
   return feeds.every((item) => item.url !== url);
 };
 
+const postsController = (elements, handlers, utilities, posts) => {
+  const {
+    handleFormState, fetchRSSFeeds, UiHandlers, handleFeedsStore, handlePostsStore,
+  } = handlers;
+  const { getCurrentState, getPostData } = utilities;
+  const { addVisitedPostId } = UiHandlers;
+  const {
+    modalBody, modalTitle, modalReadMoreLink,
+  } = elements.modalContainer;
+  const {
+    postsContainer,
+  } = elements;
+
+  // const viewPostButtons = posts.map((post) => document.querySelector(`button[data-id=${post.id}]`));
+  // viewPostButtons.forEach((btn) => {
+  //   btn.addEventListener('click', (e) => {
+  //     if (e.target.tagName === 'BUTTON') {
+  //       const dataId = e.target.dataset.id;
+  //       const { title, description, link: postLink } = getPostData(dataId);
+  //       addVisitedPostId(dataId);
+  //       modalTitle.textContent = title;
+  //       modalBody.textContent = description;
+  //       modalReadMoreLink.setAttribute('href', postLink);
+  //     }
+  //   });
+  // });
+
+  postsContainer.addEventListener('click', (e) => {
+    const dataId = e.target.dataset.id;
+
+    const link = document.querySelector(`a[data-id=${dataId}]`);
+    const button = document.querySelector(`button[data-id=${dataId}]`);
+
+    if (e.target === link) {
+      addVisitedPostId(dataId);
+    }
+    if (e.target === button) {
+      // const dataId = e.target.dataset.id;
+      const { title, description, link: postLink } = getPostData(dataId);
+      addVisitedPostId(dataId);
+      modalTitle.textContent = title;
+      modalBody.textContent = description;
+      modalReadMoreLink.setAttribute('href', postLink);
+    }
+  });
+  // });
+};
+
 const controller = (elements, handlers, utilities) => {
-  const { handleFormState, fetchRSSFeeds, UiHandlers } = handlers;
+  const {
+    handleFormState, fetchRSSFeeds, UiHandlers, handleFeedsStore, handlePostsStore,
+  } = handlers;
   const { getCurrentState, getPostData } = utilities;
   const { addVisitedPostId } = UiHandlers;
   const { form, input } = elements.formContainer;
@@ -62,29 +114,27 @@ const controller = (elements, handlers, utilities) => {
       }
 
       if (isUrlUnique(feeds, inputValue)) {
-        fetchRSSFeeds(inputValue);
+        // fetchRSSFeeds(inputValue);
+        fetchRSS(inputValue).then(({ data }) => HTMLparse(data.contents))
+          .then((parsed) => {
+            const {
+              title, description, id, items,
+            } = parsed.channel;
+
+            handleFeedsStore({
+              title, description, id, url: inputValue,
+            });
+            handlePostsStore(items);
+            handleFormState({ status: 'ready', message: [`${i18n.t('form.feedback.success')}`], inputValue: '' });
+            postsController(elements, handlers, utilities, items);
+          }).catch((err) => {
+            handleFormState({ status: 'error', message: [`${i18n.t(`form.feedback.fetchErrors.${err.message}`)}`] });
+            throw new Error(err);
+          });
       } else {
         handleFormState({ status: 'error', message: [`${i18n.t('form.feedback.duplicatedURL')}`] });
       }
     }).catch((err) => console.error(err));
-  });
-
-  postsContainer.addEventListener('click', (e) => {
-    const dataId = e.target.dataset.id;
-
-    const link = document.querySelector(`a[data-id=${dataId}]`);
-    const button = document.querySelector(`button[data-id=${dataId}]`);
-
-    if (e.target === link) {
-      addVisitedPostId(dataId);
-    }
-    if (e.target === button) {
-      const { title, description, link: postLink } = getPostData(dataId);
-      addVisitedPostId(dataId);
-      modalTitle.textContent = title;
-      modalBody.textContent = description;
-      modalReadMoreLink.setAttribute('href', postLink);
-    }
   });
 };
 

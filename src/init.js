@@ -1,3 +1,4 @@
+import onChange from 'on-change';
 import controller from './controller';
 import model from './model';
 
@@ -15,6 +16,7 @@ const init = () => {
       },
       postsStore: {
         posts: [],
+
       },
 
       UI: {
@@ -50,8 +52,21 @@ const init = () => {
     };
     console.log(elements);
 
-    const { handlers, utilities } = model(initialState, elements);
+    const { handlers, utilities, state } = model(initialState, elements);
     controller(elements, handlers, utilities);
+
+    //! remove
+
+    document.querySelector('#current-state').addEventListener('click', () => {
+      console.log(onChange.target(state));
+    });
+
+    form.parentElement.querySelectorAll('p.text-muted').forEach((p) => {
+      p.addEventListener('click', (e) => {
+        const text = e.target.textContent.split('Пример: ')[1].trim();
+        input.value = `${text} `;
+      });
+    });
   });
 };
 

@@ -25,7 +25,8 @@ const stateHandlers = (state) => {
 
   const handlePostsStore = (newPosts) => {
     const { posts } = onChange.target(state.postsStore);
-    state.postsStore = { posts: [...getNewUniquePosts(posts, newPosts), ...posts] };
+    const updatedPosts = [...getNewUniquePosts(posts, newPosts), ...posts];
+    state.postsStore = { posts: updatedPosts };
   };
 
   const fetchRSSFeeds = (url) => {
