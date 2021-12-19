@@ -70,7 +70,7 @@ const controller = (elements, handlers, utilities, i18n) => {
   });
 
   input.focus();
-  console.log(form);
+
   input.addEventListener('input', (e) => {
     const { value } = e.target;
     handleFormState({ status: 'editing', inputValue: value });
@@ -104,8 +104,9 @@ const controller = (elements, handlers, utilities, i18n) => {
             handleFormState({ status: 'ready', message: [`${i18n.t('form.feedback.success')}`], inputValue: '' });
             elementsEventsController(elements, handlers, utilities, items);
           }).catch((err) => {
-            handleFormState({ status: 'error', message: [`${i18n.t(`form.feedback.fetchErrors.${err.message}`)}`] });
-            throw new Error(err);
+            const errorMessage = err === 'Invalid Xml Data' ? ' Invalid Xml Data' : 'Network Error';
+
+            handleFormState({ status: 'error', message: [`${i18n.t(`form.feedback.fetchErrors.${errorMessage}`)}`] });
           });
       } else {
         handleFormState({ status: 'error', message: [`${i18n.t('form.feedback.duplicatedURL')}`] });

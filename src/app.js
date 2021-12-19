@@ -52,7 +52,6 @@ const app = (i18n) => {
     feedsContainer,
 
   };
-  console.log(elements);
 
   // eslint-disable-next-line no-unused-vars
   const { handlers, utilities, state } = model(initialState, i18n, elements);

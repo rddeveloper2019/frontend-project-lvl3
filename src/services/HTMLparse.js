@@ -8,12 +8,12 @@ const getTextContent = (elelemt, selector) => {
   return null;
 };
 
-const parse = (xml) => {
+const parse = (xml) => new Promise((resolve, reject) => {
   const parser = new DOMParser();
   const htmlDoc = parser.parseFromString(xml, 'application/xml');
   const fetchedItems = htmlDoc.querySelectorAll('item');
   if (!xml || fetchedItems.length === 0) {
-    throw new Error('Invalid Xml Data');
+    reject(new Error('Invalid Xml Data'));
   }
 
   const parsed = {
@@ -52,8 +52,8 @@ const parse = (xml) => {
     parsed.channel.items.push(itemObj);
   });
 
-  return parsed;
-};
+  resolve(parsed);
+});
 
 const HTMLparse = (xml) => new Promise((resolve) => {
   resolve(parse(xml));
