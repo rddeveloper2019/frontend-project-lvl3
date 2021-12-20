@@ -1,4 +1,4 @@
-import renderers from './renderers';
+import getRenderFunctions from './renderers';
 
 const switchFormByStatus = (elements, cb, value) => {
   const { status, message } = value;
@@ -19,7 +19,7 @@ const view = (elements, i18n) => (path, value) => {
 
   const {
     renderForm, renderFeeds, renderPosts, addVisitedPost,
-  } = renderers(i18n);
+  } = getRenderFunctions(i18n);
 
   if (path === 'formState') {
     switchFormByStatus(elements.formContainer, renderForm, value);

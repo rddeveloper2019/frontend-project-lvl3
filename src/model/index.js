@@ -12,7 +12,9 @@ const model = (initialState, i18n, elements) => {
   } = stateHandlers(state);
   const { addVisitedPostId } = UiStateHandlers(state);
   const { getCurrentState, getPostData } = utils(state);
+
   autoUpdate();
+
   return {
     state,
     handlers: {

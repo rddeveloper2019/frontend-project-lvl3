@@ -1,6 +1,6 @@
 /* eslint-disable no-lone-blocks */
 
-const renderFunctions = (i18n) => {
+const getRenderFunctions = (i18n) => {
   const clearForm = (formContainer) => {
     const {
       input, formFeedbackEl, addBtn,
@@ -120,4 +120,4 @@ const renderFunctions = (i18n) => {
   return renderers;
 };
 
-export default renderFunctions;
+export default getRenderFunctions;
