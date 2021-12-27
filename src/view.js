@@ -81,6 +81,7 @@ const renderForm = (formContainer, flag, message) => {
       }
       break;
     default:
+      break;
   }
 };
 
@@ -96,6 +97,7 @@ const addVisitedPost = (postsContainer, data) => {
 
 const renderPosts = (container, data, i18n) => {
   const { posts } = data;
+
   const getLinkClass = (post) => {
     if (post.visited) {
       return ['fw-normal', 'link-dark'];

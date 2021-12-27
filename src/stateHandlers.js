@@ -17,12 +17,12 @@ const stateHandlers = (state) => {
     state.feedsStore = newStore;
   };
 
-  const getNewUniquePosts = (oldPosts, newPosts) => {
-    const isPostUnique = (newPost) => oldPosts.every((oldPost) => oldPost.guid !== newPost.guid);
-    return newPosts.filter(isPostUnique);
-  };
-
   const setPostsStore = (newPosts) => {
+    const getNewUniquePosts = (oldPosts, receivedPosts) => {
+      const isPostUnique = (newPost) => oldPosts.every((oldPost) => oldPost.guid !== newPost.guid);
+      return receivedPosts.filter(isPostUnique);
+    };
+
     const { posts } = onChange.target(state.postsStore);
     const updatedPosts = [...getNewUniquePosts(posts, newPosts), ...posts];
     state.postsStore = { posts: updatedPosts };
@@ -61,12 +61,12 @@ const stateHandlers = (state) => {
   };
 
   const autoUpdate = () => {
-    const { feedsStore, formState, autoRefresh } = onChange.target(state);
+    const { feedsStore, formState } = onChange.target(state);
     const { feeds } = feedsStore;
 
     let needUpdate;
 
-    if (autoRefresh === 'on' && feeds.length > 0) {
+    if (feeds.length > 0) {
       needUpdate = formState.status === 'ready' || formState.status === 'error';
     }
 

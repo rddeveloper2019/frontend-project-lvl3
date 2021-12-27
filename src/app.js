@@ -25,7 +25,7 @@ const app = (i18n) => {
     UI: {
       visitedPostsIDs: [],
     },
-    autoRefresh: 'on',
+
   };
 
   const form = document.querySelector('form');
@@ -135,10 +135,10 @@ const app = (i18n) => {
     if (e.target.tagName === 'BUTTON') {
       const { posts } = onChange.target(state).postsStore;
       const [currentPost] = posts.filter((post) => post.id === dataId);
-      const { title, description, link: postLink } = currentPost;
+      const { title, description, link } = currentPost;
       modalTitle.textContent = title;
       modalBody.textContent = description;
-      modalReadMoreLink.setAttribute('href', postLink);
+      modalReadMoreLink.setAttribute('href', link);
       setPostAsVisited(dataId);
     }
 
