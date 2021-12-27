@@ -65,7 +65,7 @@ const app = (i18n) => {
     autoUpdate,
     handleFeedsStore,
     handlePostsStore,
-    manualFetch,
+    fetch,
     addVisitedPostId,
   } = stateHandlers(state);
 
@@ -99,7 +99,7 @@ const app = (i18n) => {
 
     handleFormState({ status: 'sending' });
 
-    Promise.all([validateInput(input.value), manualFetch(input.value)])
+    Promise.all([validateInput(input.value), fetch(input.value)])
       .then(([, parsed]) => {
         const {
           title, description, id, items,
@@ -130,17 +130,11 @@ const app = (i18n) => {
 
   postsContainer.addEventListener('click', (e) => {
     const dataId = e.target.dataset.id;
-    // const link = document.querySelector(`a[data-id=${dataId}]`);
-
-    // if (e.target === link) {
-
-    // }
 
     if (e.target.tagName === 'BUTTON') {
       const { posts } = onChange.target(state).postsStore;
       const [currentPost] = posts.filter((post) => post.id === dataId);
       const { title, description, link: postLink } = currentPost;
-      // addVisitedPostId(dataId);
       modalTitle.textContent = title;
       modalBody.textContent = description;
       modalReadMoreLink.setAttribute('href', postLink);

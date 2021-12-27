@@ -42,7 +42,7 @@ const stateHandlers = (state) => {
     state.UI.visitedPostsIDs = [...state.UI.visitedPostsIDs, id];
   };
 
-  const manualFetch = (url) => fetchRSS(url)
+  const fetch = (url) => fetchRSS(url)
     .then(({ data }) => HTMLparse(data.contents))
     .then((parsed) => parsed.channel)
     .catch((err) => {
@@ -85,7 +85,7 @@ const stateHandlers = (state) => {
     handleFeedsStore,
     handlePostsStore,
     autoUpdate,
-    manualFetch,
+    fetch,
     addVisitedPostId,
   };
 };
