@@ -139,9 +139,12 @@ const app = (i18n) => {
       modalTitle.textContent = title;
       modalBody.textContent = description;
       modalReadMoreLink.setAttribute('href', postLink);
+      setPostAsVisited(dataId);
     }
 
-    setPostAsVisited(dataId);
+    if (e.target.tagName === 'A') {
+      setPostAsVisited(dataId);
+    }
   });
 };
 

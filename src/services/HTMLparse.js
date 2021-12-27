@@ -1,7 +1,7 @@
 import uniqid from 'uniqid';
 
-const getTextContent = (elelemt, selector) => {
-  const elem = elelemt.querySelector(selector);
+const getTextContent = (element, selector) => {
+  const elem = element.querySelector(selector);
   if (elem) {
     return elem.textContent;
   }
