@@ -2,5 +2,7 @@
 /ownFiles/
 /__tests__/
 *.log
+*.txt
 dist
 assets
+

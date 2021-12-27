@@ -2,14 +2,13 @@ import axios from 'axios';
 
 const allOriginsAPIUrl = 'https://hexlet-allorigins.herokuapp.com/get?disableCache=true&charset=utf-8&url=';
 
-const generateUrl = (url) => `${allOriginsAPIUrl}${`${url}`}`;
-
-const fetchRSSFeeds = (url) => new Promise((resolve, reject) => {
+const fetchRSSFeeds = (url) => new Promise((resolve) => {
+  const RSSUrl = new URL(allOriginsAPIUrl + url);
   resolve(
     axios.get(
-      generateUrl(url),
+      RSSUrl,
     ).catch(() => {
-      reject(new Error('Network Error'));
+      throw new Error('Network Error');
     }),
   );
 });

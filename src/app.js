@@ -2,8 +2,7 @@
 import Modal from 'bootstrap';
 import * as yup from 'yup';
 import onChange from 'on-change';
-import stateHandlers, { UiStateHandlers } from './handlers';
-import utils from './utils';
+import stateHandlers from './handlers';
 import view from './view';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
@@ -67,31 +66,21 @@ const app = (i18n) => {
     handleFeedsStore,
     handlePostsStore,
     manualFetch,
+    addVisitedPostId,
   } = stateHandlers(state);
 
-  const { addVisitedPostId } = UiStateHandlers(state);
-  const { getCurrentState, getPostData } = utils(state);
+  const getCurrentState = (field = null, subField = null) => {
+    const currentState = onChange.target(state);
+    if (!field) {
+      return currentState;
+    }
+    if (!subField) {
+      return currentState[field];
+    }
+    return currentState[field][subField];
+  };
 
   autoUpdate();
-
-  // const elementsEventsController = () => {
-  //   postsContainer.addEventListener('click', (e) => {
-  //     const dataId = e.target.dataset.id;
-  //     const link = document.querySelector(`a[data-id=${dataId}]`);
-
-  //     if (e.target === link) {
-  //       addVisitedPostId(dataId);
-  //     }
-
-  //     if (e.target.tagName === 'BUTTON' || e.target.tagName === 'LI') {
-  //       const { title, description, link: postLink } = getPostData(dataId);
-  //       addVisitedPostId(dataId);
-  //       modalTitle.textContent = title;
-  //       modalBody.textContent = description;
-  //       modalReadMoreLink.setAttribute('href', postLink);
-  //     }
-  //   });
-  // };
 
   const validateInput = (value) => {
     const currentFeeds = getCurrentState('feedsStore', 'feeds').map((feed) => feed.url);
@@ -160,7 +149,8 @@ const app = (i18n) => {
     }
 
     if (e.target.tagName === 'BUTTON' || e.target.tagName === 'LI') {
-      const { title, description, link: postLink } = getPostData(dataId);
+      const [currentPost] = getCurrentState('postsStore', 'posts').filter((post) => post.id === dataId);
+      const { title, description, link: postLink } = currentPost;
       addVisitedPostId(dataId);
       modalTitle.textContent = title;
       modalBody.textContent = description;
