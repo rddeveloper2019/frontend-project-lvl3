@@ -46,7 +46,6 @@ const stateHandlers = (state) => {
     .then(({ data }) => HTMLparse(data.contents))
     .then((parsed) => parsed.channel)
     .catch((err) => {
-      console.log('err', err.message);
       throw new Error(err.message);
     });
 

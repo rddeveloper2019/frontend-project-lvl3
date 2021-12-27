@@ -148,7 +148,6 @@ const app = (i18n) => {
       modalReadMoreLink.setAttribute('href', postLink);
     }
   });
-  console.log(postsContainer);
 };
 
 export default app;

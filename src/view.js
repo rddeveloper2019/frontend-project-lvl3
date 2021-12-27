@@ -137,7 +137,6 @@ const renderPosts = (container, data, i18n) => {
   });
 
   postsContainer.append(ul);
-
   // eslint-disable-next-line no-param-reassign
   container.innerHTML = '';
   container.append(postsContainer);
