@@ -2,7 +2,7 @@
 import Modal from 'bootstrap';
 import * as yup from 'yup';
 import onChange from 'on-change';
-import stateHandlers from './handlers';
+import stateHandlers from './stateHandlers';
 import view from './view';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';

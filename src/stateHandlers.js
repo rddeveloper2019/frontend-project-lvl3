@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import onChange from 'on-change';
-import fetchRSS from '../services/fetchRSS';
-import HTMLparse from '../services/HTMLparse';
+import fetchRSS from './services/fetchRSS';
+import HTMLparse from './services/HTMLparse';
 
 const stateHandlers = (state) => {
   const handleFormState = (payload = {}) => {
@@ -42,17 +42,6 @@ const stateHandlers = (state) => {
     state.UI.visitedPostsIDs = [...state.UI.visitedPostsIDs, id];
   };
 
-  // const manualFetch = (url) => new Promise((resolve, reject) => {
-  //   fetchRSS(url)
-  //     .then(({ data }) => HTMLparse(data.contents))
-  //     .then((parsed) => {
-  //       resolve(parsed.channel);
-  //     })
-  //     .catch((err) => {
-  //       reject(err);
-  //     });
-  // });
-
   const manualFetch = (url) => fetchRSS(url)
     .then(({ data }) => HTMLparse(data.contents))
     .then((parsed) => parsed.channel)
@@ -60,17 +49,6 @@ const stateHandlers = (state) => {
       console.log('err', err.message);
       throw new Error(err.message);
     });
-
-  // const autoFetch = (feeds) => {
-  //   const fetches = feeds.map((feed) => Promise.resolve(fetchRSS(feed.url, 'auto')));
-  //   Promise.all(fetches).then((response) => {
-  //     response.forEach(({ data }) => {
-  //       const parsed = HTMLparse(data.contents);
-  //       const { items } = parsed.channel;
-  //       handlePostsStore(items);
-  //     });
-  //   });
-  // };
 
   const autoFetch = (feeds) => {
     const fetches = feeds.map((feed) => fetchRSS(feed.url));
