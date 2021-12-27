@@ -101,8 +101,8 @@ const app = (i18n) => {
 
     const inputValue = input.value;
 
-    Promise.all([manualFetch(inputValue), validateInput(inputValue)])
-      .then(([parsed]) => {
+    Promise.all([validateInput(inputValue), manualFetch(inputValue)])
+      .then(([, parsed]) => {
         const {
           title, description, id, items,
         } = parsed;
