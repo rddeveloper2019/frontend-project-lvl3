@@ -7,27 +7,27 @@ import view from './view';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 
+const initialState = {
+  formState: {
+    status: 'ready',
+    inputValue: null,
+    message: null,
+  },
+
+  feedsStore: {
+    feeds: [],
+  },
+  postsStore: {
+    posts: [],
+  },
+
+  UI: {
+    visitedPostsIDs: [],
+  },
+  autoRefresh: 'on',
+};
+
 const app = (i18n) => {
-  const initialState = {
-    formState: {
-      status: 'ready',
-      inputValue: null,
-      message: null,
-    },
-
-    feedsStore: {
-      feeds: [],
-    },
-    postsStore: {
-      posts: [],
-    },
-
-    UI: {
-      visitedPostsIDs: [],
-    },
-    autoRefresh: 'on',
-  };
-
   const form = document.querySelector('form');
   const input = form.elements['url-input'];
   const addBtn = form.elements['add-feed-button'];
@@ -69,21 +69,12 @@ const app = (i18n) => {
     addVisitedPostId,
   } = stateHandlers(state);
 
-  const getCurrentState = (field = null, subField = null) => {
-    const currentState = onChange.target(state);
-    if (!field) {
-      return currentState;
-    }
-    if (!subField) {
-      return currentState[field];
-    }
-    return currentState[field][subField];
-  };
-
   autoUpdate();
 
   const validateInput = (value) => {
-    const currentFeeds = getCurrentState('feedsStore', 'feeds').map((feed) => feed.url);
+    const { feeds } = onChange.target(state).feedsStore;
+    const currentFeeds = feeds.map((feed) => feed.url);
+
     const schema = yup.object().shape({
       value: yup
         .string()
@@ -128,7 +119,6 @@ const app = (i18n) => {
           message: [`${i18n.t('form.feedback.success')}`],
           inputValue: '',
         });
-        // elementsEventsController();
       })
       .catch((err) => {
         handleFormState({
@@ -149,7 +139,8 @@ const app = (i18n) => {
     }
 
     if (e.target.tagName === 'BUTTON' || e.target.tagName === 'LI') {
-      const [currentPost] = getCurrentState('postsStore', 'posts').filter((post) => post.id === dataId);
+      const { posts } = onChange.target(state).postsStore;
+      const [currentPost] = posts.filter((post) => post.id === dataId);
       const { title, description, link: postLink } = currentPost;
       addVisitedPostId(dataId);
       modalTitle.textContent = title;
@@ -157,6 +148,7 @@ const app = (i18n) => {
       modalReadMoreLink.setAttribute('href', postLink);
     }
   });
+  console.log(postsContainer);
 };
 
 export default app;
