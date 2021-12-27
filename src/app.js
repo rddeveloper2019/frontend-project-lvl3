@@ -99,9 +99,7 @@ const app = (i18n) => {
 
     handleFormState({ status: 'sending' });
 
-    const inputValue = input.value;
-
-    Promise.all([validateInput(inputValue), manualFetch(inputValue)])
+    Promise.all([validateInput(input.value), manualFetch(input.value)])
       .then(([, parsed]) => {
         const {
           title, description, id, items,
@@ -111,7 +109,7 @@ const app = (i18n) => {
           title,
           description,
           id,
-          url: inputValue,
+          url: input.value,
         });
         handlePostsStore(items);
         handleFormState({
@@ -132,21 +130,23 @@ const app = (i18n) => {
 
   postsContainer.addEventListener('click', (e) => {
     const dataId = e.target.dataset.id;
-    const link = document.querySelector(`a[data-id=${dataId}]`);
+    // const link = document.querySelector(`a[data-id=${dataId}]`);
 
-    if (e.target === link) {
-      addVisitedPostId(dataId);
-    }
+    // if (e.target === link) {
 
-    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'LI') {
+    // }
+
+    if (e.target.tagName === 'BUTTON') {
       const { posts } = onChange.target(state).postsStore;
       const [currentPost] = posts.filter((post) => post.id === dataId);
       const { title, description, link: postLink } = currentPost;
-      addVisitedPostId(dataId);
+      // addVisitedPostId(dataId);
       modalTitle.textContent = title;
       modalBody.textContent = description;
       modalReadMoreLink.setAttribute('href', postLink);
     }
+
+    addVisitedPostId(dataId);
   });
 };
 
