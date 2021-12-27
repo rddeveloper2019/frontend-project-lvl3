@@ -76,6 +76,7 @@ const app = (i18n) => {
     handlePostsStore,
     manualFetch,
   } = stateHandlers(state);
+
   const { addVisitedPostId } = UiStateHandlers(state);
   const { getCurrentState, getPostData } = utils(state);
 
@@ -107,18 +108,17 @@ const app = (i18n) => {
     });
   };
 
-  const validateInput = (value) =>
-    new Promise((resolve) => {
-      resolve(schema.validate({ value }));
-    })
-      .then(() => '')
-      .catch((err) => {
-        const error = err.errors;
-        if (error.length > 0) {
-          return error;
-        }
-        return '';
-      });
+  const validateInput = (value) => new Promise((resolve) => {
+    resolve(schema.validate({ value }));
+  })
+    .then(() => '')
+    .catch((err) => {
+      const error = err.errors;
+      if (error.length > 0) {
+        return error;
+      }
+      return '';
+    });
 
   input.focus();
 
@@ -145,7 +145,9 @@ const app = (i18n) => {
         if (isUrlUnique(feeds, inputValue)) {
           manualFetch(inputValue)
             .then((parsed) => {
-              const { title, description, id, items } = parsed;
+              const {
+                title, description, id, items,
+              } = parsed;
               handleFeedsStore({
                 title,
                 description,
@@ -163,10 +165,9 @@ const app = (i18n) => {
             .catch((err) => {
               let errorMessage;
               if (err.message) {
-                errorMessage =
-                  err.message === 'Invalid Xml Data'
-                    ? err.message
-                    : 'Network Error';
+                errorMessage = err.message === 'Invalid Xml Data'
+                  ? err.message
+                  : 'Network Error';
               } else {
                 errorMessage = 'Network Error';
               }

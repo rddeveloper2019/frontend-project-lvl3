@@ -18,8 +18,7 @@ const stateHandlers = (state) => {
   };
 
   const getNewUniquePosts = (oldPosts, newPosts) => {
-    const isPostUnique = (newPost) =>
-      oldPosts.every((oldPost) => oldPost.guid !== newPost.guid);
+    const isPostUnique = (newPost) => oldPosts.every((oldPost) => oldPost.guid !== newPost.guid);
     return newPosts.filter(isPostUnique);
   };
 
@@ -29,22 +28,19 @@ const stateHandlers = (state) => {
     state.postsStore = { posts: updatedPosts };
   };
 
-  const manualFetch = (url) =>
-    new Promise((resolve, reject) => {
-      fetchRSS(url)
-        .then(({ data }) => HTMLparse(data.contents))
-        .then((parsed) => {
-          resolve(parsed.channel);
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+  const manualFetch = (url) => new Promise((resolve, reject) => {
+    fetchRSS(url)
+      .then(({ data }) => HTMLparse(data.contents))
+      .then((parsed) => {
+        resolve(parsed.channel);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 
   const autoFetch = (feeds) => {
-    const fetches = feeds.map((feed) =>
-      Promise.resolve(fetchRSS(feed.url, 'auto'))
-    );
+    const fetches = feeds.map((feed) => Promise.resolve(fetchRSS(feed.url, 'auto')));
     Promise.all(fetches).then((response) => {
       response.forEach(({ data }) => {
         HTMLparse(data.contents).then((parsed) => {
@@ -84,13 +80,12 @@ const stateHandlers = (state) => {
   };
 };
 
-const getUpdatedPosts = (posts, id) =>
-  posts.map((post) => {
-    if (post.id === id) {
-      return { ...post, visited: true };
-    }
-    return post;
-  });
+const getUpdatedPosts = (posts, id) => posts.map((post) => {
+  if (post.id === id) {
+    return { ...post, visited: true };
+  }
+  return post;
+});
 
 export const UiStateHandlers = (state) => {
   const addVisitedPostId = (id) => {

@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 const clearForm = (formContainer) => {
   const { input, formFeedbackEl, addBtn } = formContainer;
 
@@ -15,7 +16,9 @@ const renderForm = (formContainer, flag, message) => {
     editing: 'text-success',
     error: 'text-danger',
   };
-  const { form, input, formFeedbackEl, addBtn } = formContainer;
+  const {
+    form, input, formFeedbackEl, addBtn,
+  } = formContainer;
 
   if (flag !== 'editing') {
     clearForm(formContainer);
@@ -79,22 +82,22 @@ const renderPosts = (elementsContainer, data, i18n) => {
 
   const template = `
     <div class="card-body"><h2 class="card-title h4">${i18n.t(
-      'posts'
-    )}</h2></div>
+    'posts',
+  )}</h2></div>
       <ul class="list-group border-0 rounded-0">
         ${posts
-          .map(
-            (post) => `
+    .map(
+      (post) => `
         <li class="list-group-item d-flex justify-content-between align-items-start border-0 border-end-0"><a
         href=${post.link} class=${getLinkClass(post)} data-id=${post.id}
         target="_blank" rel="noopener noreferrer">${
-          post.title
-        }</a><button type="button" class="btn btn-outline-dark btn-sm" data-id=${
-              post.id
-            } data-bs-toggle="modal"
-        data-bs-target="#modal">${i18n.t('viewButton')}</button></li>`
-          )
-          .join('')}
+  post.title
+}</a><button type="button" class="btn btn-outline-dark btn-sm" data-id=${
+  post.id
+} data-bs-toggle="modal"
+        data-bs-target="#modal">${i18n.t('viewButton')}</button></li>`,
+    )
+    .join('')}
       </ul>`;
   postsEl.innerHTML = template;
   postsContainer.innerHTML = '';
@@ -109,18 +112,18 @@ const renderFeeds = (elementsContainer, data, i18n) => {
 
   const template = `
     <div class="card-body"><h2 class="card-title h4">${i18n.t(
-      'feeds'
-    )}</h2></div>
+    'feeds',
+  )}</h2></div>
       <ul class="list-group border-0 rounded-0">
         ${feeds
-          .map(
-            (
-              feed
-            ) => `<li class="list-group-item border border-dark mb-1 bg-light" data-feed-id="${feed.id}"><h3 class="h6 fw-bold m-0">${feed.title}</h3>
+    .map(
+      (
+        feed,
+      ) => `<li class="list-group-item border border-dark mb-1 bg-light" data-feed-id="${feed.id}"><h3 class="h6 fw-bold m-0">${feed.title}</h3>
         <p class="m-0 small text-black-50">${feed.description}</p>
-        </li>`
-          )
-          .join('')}
+        </li>`,
+    )
+    .join('')}
       </ul>`;
 
   feedsEl.innerHTML = template;
@@ -129,21 +132,21 @@ const renderFeeds = (elementsContainer, data, i18n) => {
 };
 
 const view = (elements, i18n) => (path, value) => {
-  const switchFormByStatus = (elements, value) => {
-    const { status, message } = value;
+  const switchFormByStatus = (container, data) => {
+    const { status, message } = data;
 
     const renderBy = {
       editing: () => {
-        renderForm(elements, status);
+        renderForm(container, status);
       },
       sending: () => {
-        renderForm(elements, status);
+        renderForm(container, status);
       },
       error: () => {
-        renderForm(elements, status, message);
+        renderForm(container, status, message);
       },
       ready: () => {
-        renderForm(elements, status, message);
+        renderForm(container, status, message);
       },
     };
     renderBy[status]();
