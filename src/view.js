@@ -1,31 +1,4 @@
 /* eslint-disable no-lone-blocks */
-const createElement = (tagName = 'div', classes = [], attributes = null, textContent = '') => {
-  const newElement = document.createElement(tagName);
-  if (textContent) {
-    newElement.textContent = textContent;
-  }
-  if (classes.length > 0) {
-    classes.forEach((cl) => {
-      newElement.classList.add(cl);
-    });
-  }
-  if (attributes) {
-    Object.entries(attributes).forEach(([attrName, attrValue]) => {
-      newElement.setAttribute(attrName, attrValue);
-    });
-  }
-  return newElement;
-};
-
-const createCardsContainer = ({ title }) => {
-  const container = createElement('div', ['card', 'border-0']);
-  const cartBody = createElement('div', ['card-body']);
-  const cardTitle = createElement('h2', ['card-title', 'h4'], null, title);
-  cartBody.append(cardTitle);
-  container.append(cartBody);
-  return container;
-};
-
 const clearForm = (formContainer) => {
   const { input, formFeedbackEl, addBtn } = formContainer;
 
@@ -94,118 +67,110 @@ const addVisitedPost = (postsContainer, data) => {
   visitedPostEl.classList.add('link-secondary');
 };
 
-const renderPosts = (container, data, i18n) => {
+const renderPosts = (elementsContainer, data, i18n) => {
   const { posts } = data;
+  const postsContainer = elementsContainer;
+  const postsEl = document.createElement('div');
+  postsEl.classList.add('card', 'border-0');
+
   const getLinkClass = (post) => {
     if (post.visited) {
-      return ['fw-normal', 'link-dark'];
+      return 'fw-normal link-dark';
     }
-    return ['fw-bold', 'link-dark'];
+    return 'fw-bold link-dark';
   };
 
-  const postsContainer = createCardsContainer({
-    title: i18n.t(
-      'posts',
-    ),
-  });
-
-  const ul = createElement('ul', ['list-group', 'border-0', 'rounded-0']);
-  posts.forEach((post) => {
-    const li = createElement('li', ['list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0']);
-
-    const linkAttributes = {
-      href: post.link,
-      'data-id': post.id,
-      target: '_blank',
-      rel: 'noopener',
-      noreferrer: '',
-    };
-    const a = createElement('a', getLinkClass(post), linkAttributes, post.title);
-
-    const buttonAttributes = {
-      'data-id': post.id,
-      'data-bs-toggle': 'modal',
-      'data-bs-target': '#modal',
-      type: 'button',
-    };
-
-    const button = createElement('button', ['btn', 'btn-outline-dark', 'btn-sm'], buttonAttributes, i18n.t('viewButton'));
-
-    li.append(a);
-    li.append(button);
-    ul.append(li);
-  });
-
-  postsContainer.append(ul);
-
-  // eslint-disable-next-line no-param-reassign
-  container.innerHTML = '';
-  container.append(postsContainer);
+  const template = `
+    <div class="card-body"><h2 class="card-title h4">${i18n.t(
+    'posts',
+  )}</h2></div>
+      <ul class="list-group border-0 rounded-0">
+        ${posts
+    .map(
+      (post) => `
+        <li class="list-group-item d-flex justify-content-between align-items-start border-0 border-end-0"><a
+        href=${post.link} class=${getLinkClass(post)} data-id=${post.id}
+        target="_blank" rel="noopener noreferrer">${
+  post.title
+}</a><button type="button" class="btn btn-outline-dark btn-sm" data-id=${
+  post.id
+} data-bs-toggle="modal"
+        data-bs-target="#modal">${i18n.t('viewButton')}</button></li>`,
+    )
+    .join('')}
+      </ul>`;
+  postsEl.innerHTML = template;
+  postsContainer.innerHTML = '';
+  postsContainer.append(postsEl);
 };
 
-const renderFeeds = (container, data, i18n) => {
+const renderFeeds = (elementsContainer, data, i18n) => {
   const { feeds } = data;
+  const feedsContainer = elementsContainer;
+  const feedsEl = document.createElement('div');
+  feedsEl.classList.add('card', 'border-0');
 
-  const feedsContainer = createCardsContainer({
-    title: i18n.t(
-      'feeds',
-    ),
-  });
-  const ul = createElement('ul', ['list-group', 'border-0', 'rounded-0']);
-  feeds.forEach((feed) => {
-    const li = createElement('li', ['list-group-item', 'border', 'border-dark', 'mb-1', 'bg-light'], { 'data-feed-id': feed.id });
-    const titleEl = createElement('h3', ['h6', 'fw-bold', 'm-0'], null, feed.title);
-    const descrEl = createElement('p', ['m-0', 'small', 'text-black-50'], null, feed.description);
-    li.append(titleEl);
-    li.append(descrEl);
-    ul.append(li);
-  });
-  feedsContainer.append(ul);
+  const template = `
+    <div class="card-body"><h2 class="card-title h4">${i18n.t(
+    'feeds',
+  )}</h2></div>
+      <ul class="list-group border-0 rounded-0">
+        ${feeds
+    .map(
+      (
+        feed,
+      ) => `<li class="list-group-item border border-dark mb-1 bg-light" data-feed-id="${feed.id}"><h3 class="h6 fw-bold m-0">${feed.title}</h3>
+        <p class="m-0 small text-black-50">${feed.description}</p>
+        </li>`,
+    )
+    .join('')}
+      </ul>`;
 
-  // eslint-disable-next-line no-param-reassign
-  container.innerHTML = '';
-  container.append(feedsContainer);
-};
-
-const switchFormByStatus = (container, data) => {
-  const { status, message } = data;
-
-  const renderBy = {
-    editing: () => {
-      renderForm(container, status);
-    },
-    sending: () => {
-      renderForm(container, status);
-    },
-    error: () => {
-      renderForm(container, status, message);
-    },
-    ready: () => {
-      renderForm(container, status, message);
-    },
-  };
-  renderBy[status]();
+  feedsEl.innerHTML = template;
+  feedsContainer.innerHTML = '';
+  feedsContainer.append(feedsEl);
 };
 
 const view = (elements, i18n) => (path, value) => {
+  const switchFormByStatus = (container, data) => {
+    const { status, message } = data;
+
+    const renderBy = {
+      editing: () => {
+        renderForm(container, status);
+      },
+      sending: () => {
+        renderForm(container, status);
+      },
+      error: () => {
+        renderForm(container, status, message);
+      },
+      ready: () => {
+        renderForm(container, status, message);
+      },
+    };
+    renderBy[status]();
+  };
+
   if (path === 'formState') {
     switchFormByStatus(elements.formContainer, value);
-  }
-  switch (path) {
-    case 'feedsStore':
-      renderFeeds(elements.feedsContainer, value, i18n);
-      break;
+  } else {
+    switch (path) {
+      case 'feedsStore':
+        renderFeeds(elements.feedsContainer, value, i18n);
+        break;
 
-    case 'postsStore':
-      renderPosts(elements.postsContainer, value, i18n);
-      break;
+      case 'postsStore':
+        renderPosts(elements.postsContainer, value, i18n);
+        break;
 
-    case 'UI.visitedPostsIDs':
-      addVisitedPost(elements.postsContainer, value);
-      break;
+      case 'UI.visitedPostsIDs':
+        addVisitedPost(elements.postsContainer, value);
+        break;
 
-    default:
-      break;
+      default:
+        break;
+    }
   }
 };
 

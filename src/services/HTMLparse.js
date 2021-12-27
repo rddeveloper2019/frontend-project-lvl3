@@ -57,4 +57,9 @@ const parse = (xml) => {
   return parsed;
 };
 
+// const HTMLparse = (xml) => new Promise((resolve) => {
+//   resolve(parse(xml));
+// });
+
+// export default HTMLparse;
 export default parse;

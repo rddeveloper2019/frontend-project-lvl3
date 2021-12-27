@@ -17,12 +17,12 @@ const stateHandlers = (state) => {
     state.feedsStore = newStore;
   };
 
-  const handlePostsStore = (newPosts) => {
-    const getNewUniquePosts = (oldPosts, addedPosts) => {
-      const isPostUnique = (newPost) => oldPosts.every((oldPost) => oldPost.guid !== newPost.guid);
-      return addedPosts.filter(isPostUnique);
-    };
+  const getNewUniquePosts = (oldPosts, newPosts) => {
+    const isPostUnique = (newPost) => oldPosts.every((oldPost) => oldPost.guid !== newPost.guid);
+    return newPosts.filter(isPostUnique);
+  };
 
+  const handlePostsStore = (newPosts) => {
     const { posts } = onChange.target(state.postsStore);
     const updatedPosts = [...getNewUniquePosts(posts, newPosts), ...posts];
     state.postsStore = { posts: updatedPosts };
@@ -53,17 +53,6 @@ const stateHandlers = (state) => {
       });
   });
 
-  // const manualFetch = (url) => new Promise((resolve, reject) => {
-  //   fetchRSS(url)
-  //     .then(({ data }) => HTMLparse(data.contents))
-  //     .then((parsed) => {
-  //       resolve(parsed.channel);
-  //     })
-  //     .catch((err) => {
-  //       reject(err);
-  //     });
-  // });
-
   const autoFetch = (feeds) => {
     const fetches = feeds.map((feed) => Promise.resolve(fetchRSS(feed.url, 'auto')));
     Promise.all(fetches).then((response) => {
@@ -71,6 +60,11 @@ const stateHandlers = (state) => {
         const parsed = HTMLparse(data.contents);
         const { items } = parsed.channel;
         handlePostsStore(items);
+
+        // HTMLparse(data.contents).then((parsed) => {
+        //   const { items } = parsed.channel;
+        //   handlePostsStore(items);
+        // });
       });
     });
   };
