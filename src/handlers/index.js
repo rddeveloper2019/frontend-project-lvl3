@@ -17,12 +17,12 @@ const stateHandlers = (state) => {
     state.feedsStore = newStore;
   };
 
-  const getNewUniquePosts = (oldPosts, newPosts) => {
-    const isPostUnique = (newPost) => oldPosts.every((oldPost) => oldPost.guid !== newPost.guid);
-    return newPosts.filter(isPostUnique);
-  };
-
   const handlePostsStore = (newPosts) => {
+    const getNewUniquePosts = (oldPosts, addedPosts) => {
+      const isPostUnique = (newPost) => oldPosts.every((oldPost) => oldPost.guid !== newPost.guid);
+      return addedPosts.filter(isPostUnique);
+    };
+
     const { posts } = onChange.target(state.postsStore);
     const updatedPosts = [...getNewUniquePosts(posts, newPosts), ...posts];
     state.postsStore = { posts: updatedPosts };
@@ -60,11 +60,6 @@ const stateHandlers = (state) => {
         const parsed = HTMLparse(data.contents);
         const { items } = parsed.channel;
         handlePostsStore(items);
-
-        // HTMLparse(data.contents).then((parsed) => {
-        //   const { items } = parsed.channel;
-        //   handlePostsStore(items);
-        // });
       });
     });
   };
