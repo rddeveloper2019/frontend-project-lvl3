@@ -13,6 +13,5 @@ const init = () => {
   });
   app(i18n);
 };
-init();
 
 export default init;
