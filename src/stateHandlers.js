@@ -4,12 +4,12 @@ import fetchRSS from './services/fetchRSS';
 import HTMLparse from './services/HTMLparse';
 
 const stateHandlers = (state) => {
-  const handleFormState = (payload = {}) => {
+  const setFormState = (payload = {}) => {
     const { formState } = onChange.target(state);
     state.formState = { ...formState, ...payload };
   };
 
-  const handleFeedsStore = (payload) => {
+  const setFeedsStore = (payload) => {
     const { feeds } = onChange.target(state.feedsStore);
     const newStore = {
       feeds: [payload, ...feeds],
@@ -22,13 +22,13 @@ const stateHandlers = (state) => {
     return newPosts.filter(isPostUnique);
   };
 
-  const handlePostsStore = (newPosts) => {
+  const setPostsStore = (newPosts) => {
     const { posts } = onChange.target(state.postsStore);
     const updatedPosts = [...getNewUniquePosts(posts, newPosts), ...posts];
     state.postsStore = { posts: updatedPosts };
   };
 
-  const addVisitedPostId = (id) => {
+  const setPostAsVisited = (id) => {
     const getUpdatedPosts = (posts, postId) => posts.map((post) => {
       if (post.id === postId) {
         return { ...post, visited: true };
@@ -55,7 +55,7 @@ const stateHandlers = (state) => {
       response.forEach(({ data }) => {
         const parsed = HTMLparse(data.contents);
         const { items } = parsed.channel;
-        handlePostsStore(items);
+        setPostsStore(items);
       });
     });
   };
@@ -81,12 +81,13 @@ const stateHandlers = (state) => {
   };
 
   return {
-    handleFormState,
-    handleFeedsStore,
-    handlePostsStore,
+    setFormState,
+    setFeedsStore,
+    setPostsStore,
+    setPostAsVisited,
     autoUpdate,
     fetch,
-    addVisitedPostId,
+
   };
 };
 

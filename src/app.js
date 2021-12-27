@@ -61,12 +61,13 @@ const app = (i18n) => {
   const state = onChange(initialState, view(elements, i18n));
 
   const {
-    handleFormState,
+    setFormState,
+    setFeedsStore,
+    setPostsStore,
+    setPostAsVisited,
     autoUpdate,
-    handleFeedsStore,
-    handlePostsStore,
     fetch,
-    addVisitedPostId,
+
   } = stateHandlers(state);
 
   autoUpdate();
@@ -91,13 +92,13 @@ const app = (i18n) => {
 
   input.addEventListener('input', (e) => {
     const { value } = e.target;
-    handleFormState({ status: 'editing', inputValue: value });
+    setFormState({ status: 'editing', inputValue: value });
   });
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    handleFormState({ status: 'sending' });
+    setFormState({ status: 'sending' });
 
     Promise.all([validateInput(input.value), fetch(input.value)])
       .then(([, parsed]) => {
@@ -105,21 +106,21 @@ const app = (i18n) => {
           title, description, id, items,
         } = parsed;
 
-        handleFeedsStore({
+        setFeedsStore({
           title,
           description,
           id,
           url: input.value,
         });
-        handlePostsStore(items);
-        handleFormState({
+        setPostsStore(items);
+        setFormState({
           status: 'ready',
           message: [`${i18n.t('form.feedback.success')}`],
           inputValue: '',
         });
       })
       .catch((err) => {
-        handleFormState({
+        setFormState({
           status: 'error',
           message: [
             `${i18n.t(`form.feedback.${err.message}`)}`,
@@ -140,7 +141,7 @@ const app = (i18n) => {
       modalReadMoreLink.setAttribute('href', postLink);
     }
 
-    addVisitedPostId(dataId);
+    setPostAsVisited(dataId);
   });
 };
 

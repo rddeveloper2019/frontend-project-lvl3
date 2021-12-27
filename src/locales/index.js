@@ -13,7 +13,7 @@ const ru = {
       },
     },
 
-    feeds: 'Фиды',
+    feeds: 'RSS-каналы',
     posts: 'Посты',
     viewButton: 'Просмотр',
 
