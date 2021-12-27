@@ -29,14 +29,6 @@ const app = (i18n) => {
     autoRefresh: 'on',
   };
 
-  const schema = yup.object().shape({
-    value: yup
-      .string()
-      .url(i18n.t('form.feedback.invalidUrl'))
-      .required(i18n.t('form.feedback.valueRequired'))
-      .nullable(),
-  });
-
   const form = document.querySelector('form');
   const input = form.elements['url-input'];
   const addBtn = form.elements['add-feed-button'];
@@ -82,43 +74,38 @@ const app = (i18n) => {
 
   autoUpdate();
 
-  const isUrlUnique = (feeds, url) => {
-    if (feeds.length === 0) {
-      return true;
-    }
-    return feeds.every((item) => item.url !== url);
-  };
+  // const elementsEventsController = () => {
+  //   postsContainer.addEventListener('click', (e) => {
+  //     const dataId = e.target.dataset.id;
+  //     const link = document.querySelector(`a[data-id=${dataId}]`);
 
-  const elementsEventsController = () => {
-    postsContainer.addEventListener('click', (e) => {
-      const dataId = e.target.dataset.id;
-      const link = document.querySelector(`a[data-id=${dataId}]`);
+  //     if (e.target === link) {
+  //       addVisitedPostId(dataId);
+  //     }
 
-      if (e.target === link) {
-        addVisitedPostId(dataId);
-      }
+  //     if (e.target.tagName === 'BUTTON' || e.target.tagName === 'LI') {
+  //       const { title, description, link: postLink } = getPostData(dataId);
+  //       addVisitedPostId(dataId);
+  //       modalTitle.textContent = title;
+  //       modalBody.textContent = description;
+  //       modalReadMoreLink.setAttribute('href', postLink);
+  //     }
+  //   });
+  // };
 
-      if (e.target.tagName === 'BUTTON' || e.target.tagName === 'LI') {
-        const { title, description, link: postLink } = getPostData(dataId);
-        addVisitedPostId(dataId);
-        modalTitle.textContent = title;
-        modalBody.textContent = description;
-        modalReadMoreLink.setAttribute('href', postLink);
-      }
+  const validateInput = (value) => {
+    const currentFeeds = getCurrentState('feedsStore', 'feeds').map((feed) => feed.url);
+    const schema = yup.object().shape({
+      value: yup
+        .string()
+        .url('invalid URL')
+        .required('value required')
+        .notOneOf(currentFeeds, 'duplicated URL')
+        .nullable(),
     });
-  };
 
-  const validateInput = (value) => new Promise((resolve) => {
-    resolve(schema.validate({ value }));
-  })
-    .then(() => '')
-    .catch((err) => {
-      const error = err.errors;
-      if (error.length > 0) {
-        return error;
-      }
-      return '';
-    });
+    return schema.validate({ value });
+  };
 
   input.focus();
 
@@ -133,59 +120,52 @@ const app = (i18n) => {
     handleFormState({ status: 'sending' });
 
     const inputValue = input.value;
-    const { feeds } = getCurrentState('feedsStore');
 
-    validateInput(inputValue)
-      .then((errorData) => {
-        if (errorData) {
-          handleFormState({ status: 'error', message: errorData });
-          return;
-        }
+    Promise.all([validateInput(inputValue), manualFetch(inputValue)])
+      .then(([, parsed]) => {
+        const {
+          title, description, id, items,
+        } = parsed;
 
-        if (isUrlUnique(feeds, inputValue)) {
-          manualFetch(inputValue)
-            .then((parsed) => {
-              const {
-                title, description, id, items,
-              } = parsed;
-              handleFeedsStore({
-                title,
-                description,
-                id,
-                url: inputValue,
-              });
-              handlePostsStore(items);
-              handleFormState({
-                status: 'ready',
-                message: [`${i18n.t('form.feedback.success')}`],
-                inputValue: '',
-              });
-              elementsEventsController();
-            })
-            .catch((err) => {
-              let errorMessage;
-              if (err.message) {
-                errorMessage = err.message === 'Invalid Xml Data'
-                  ? err.message
-                  : 'Network Error';
-              } else {
-                errorMessage = 'Network Error';
-              }
-              handleFormState({
-                status: 'error',
-                message: [
-                  `${i18n.t(`form.feedback.fetchErrors.${errorMessage}`)}`,
-                ],
-              });
-            });
-        } else {
-          handleFormState({
-            status: 'error',
-            message: [`${i18n.t('form.feedback.duplicatedURL')}`],
-          });
-        }
+        handleFeedsStore({
+          title,
+          description,
+          id,
+          url: inputValue,
+        });
+        handlePostsStore(items);
+        handleFormState({
+          status: 'ready',
+          message: [`${i18n.t('form.feedback.success')}`],
+          inputValue: '',
+        });
+        // elementsEventsController();
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        handleFormState({
+          status: 'error',
+          message: [
+            `${i18n.t(`form.feedback.${err.message}`)}`,
+          ],
+        });
+      });
+  });
+
+  postsContainer.addEventListener('click', (e) => {
+    const dataId = e.target.dataset.id;
+    const link = document.querySelector(`a[data-id=${dataId}]`);
+
+    if (e.target === link) {
+      addVisitedPostId(dataId);
+    }
+
+    if (e.target.tagName === 'BUTTON' || e.target.tagName === 'LI') {
+      const { title, description, link: postLink } = getPostData(dataId);
+      addVisitedPostId(dataId);
+      modalTitle.textContent = title;
+      modalBody.textContent = description;
+      modalReadMoreLink.setAttribute('href', postLink);
+    }
   });
 };
 
