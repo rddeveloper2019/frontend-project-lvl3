@@ -7,27 +7,27 @@ import view from './view';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
 
-const initialState = {
-  formState: {
-    status: 'ready',
-    inputValue: null,
-    message: null,
-  },
-
-  feedsStore: {
-    feeds: [],
-  },
-  postsStore: {
-    posts: [],
-  },
-
-  UI: {
-    visitedPostsIDs: [],
-  },
-  autoRefresh: 'on',
-};
-
 const app = (i18n) => {
+  const initialState = {
+    formState: {
+      status: 'ready',
+      inputValue: null,
+      message: null,
+    },
+
+    feedsStore: {
+      feeds: [],
+    },
+    postsStore: {
+      posts: [],
+    },
+
+    UI: {
+      visitedPostsIDs: [],
+    },
+    autoRefresh: 'on',
+  };
+
   const form = document.querySelector('form');
   const input = form.elements['url-input'];
   const addBtn = form.elements['add-feed-button'];
