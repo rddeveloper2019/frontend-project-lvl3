@@ -43,8 +43,10 @@ const stateHandlers = (state) => {
   };
 
   const fetch = (url) => fetchRSS(url)
-    .then(({ data }) => HTMLparse(data.contents))
-    .then((parsed) => parsed.channel)
+    .then(({ data }) => {
+      const { channel } = HTMLparse(data.contents);
+      return channel;
+    })
     .catch((err) => {
       throw new Error(err.message);
     });
@@ -53,8 +55,8 @@ const stateHandlers = (state) => {
     const fetches = feeds.map((feed) => fetchRSS(feed.url));
     Promise.all(fetches).then((response) => {
       response.forEach(({ data }) => {
-        const parsed = HTMLparse(data.contents);
-        const { items } = parsed.channel;
+        const { channel } = HTMLparse(data.contents);
+        const { items } = channel;
         setPostsStore(items);
       });
     });
