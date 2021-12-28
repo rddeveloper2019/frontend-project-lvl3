@@ -60,17 +60,19 @@ const stateHandlers = (state) => {
   };
 
   const autoUpdate = () => {
-    const { feedsStore, formState } = onChange.target(state);
+    // const { feedsStore, formState } = onChange.target(state);
+    const { feedsStore } = onChange.target(state);
+
     const { feeds } = feedsStore;
 
-    let needUpdate;
+    // let needUpdate;
 
-    if (feeds.length > 0) {
-      needUpdate = formState.status === 'ready' || formState.status === 'error';
-    }
+    // if (feeds.length > 0) {
+    //   needUpdate = formState.status === 'ready' || formState.status === 'error';
+    // }
 
     setTimeout(() => {
-      if (needUpdate) {
+      if (feeds.length > 0) {
         autoFetch(feeds);
         autoUpdate();
       } else {
