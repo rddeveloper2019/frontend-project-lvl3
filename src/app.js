@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import Modal from 'bootstrap';
 import * as yup from 'yup';
-import uniqid from 'uniqid';
+// import uniqid from 'uniqid';
 import onChange from 'on-change';
 import stateHandlers from './stateHandlers';
 import view from './view';
@@ -16,6 +16,16 @@ const app = (i18n) => {
       message: null,
     },
 
+    // feedsStore: {
+    //   feeds: [
+    //     {
+    //       title: 'Lorem ipsum feed for an interval of 30 seconds with 10 item(s)',
+    //       description: 'This is a constantly updating lorem ipsum feed',
+    //       id: 'feed_kxqeeeas',
+    //       url: 'http://lorem-rss.herokuapp.com/feed?unit=second&interval=30',
+    //     },
+    //   ],
+    // },
     feedsStore: {
       feeds: [],
     },
@@ -102,17 +112,17 @@ const app = (i18n) => {
         const {
           title, description, items,
         } = channel;
-        const channelId = uniqid('feed_');
+        // const channelId = ;
         setFeedsStore({
           title,
           description,
-          id: channelId,
+          // id: uniqid('feed_'),
           url: input.value,
         });
-        const itemsWithAdditionalData = items.map((item) => ({
-          ...item, channelId, id: uniqid('item_'), visited: false,
-        }));
-        setPostsStore(itemsWithAdditionalData);
+        // const itemsWithAdditionalData = items.map((item) => ({
+        //   ...item, channelId,
+        // }));
+        setPostsStore(items);
         setFormState({
           status: 'ready',
           message: [`${i18n.t('form.feedback.success')}`],
@@ -125,32 +135,6 @@ const app = (i18n) => {
           message: [`${i18n.t(`form.feedback.${err.message}`)}`],
         });
       });
-
-    // Promise.all([validateInput(input.value), fetch(input.value)])
-    //   .then(([, parsed]) => {
-    //     const {
-    //       title, description, id, items,
-    //     } = parsed;
-
-    //     setFeedsStore({
-    //       title,
-    //       description,
-    //       id,
-    //       url: input.value,
-    //     });
-    //     setPostsStore(items);
-    //     setFormState({
-    //       status: 'ready',
-    //       message: [`${i18n.t('form.feedback.success')}`],
-    //       inputValue: '',
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     setFormState({
-    //       status: 'error',
-    //       message: [`${i18n.t(`form.feedback.${err.message}`)}`],
-    //     });
-    //   });
   });
 
   postsContainer.addEventListener('click', (e) => {

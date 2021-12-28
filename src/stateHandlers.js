@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import onChange from 'on-change';
-
+import uniqid from 'uniqid';
 import fetchRSS from './services/fetchRSS';
 import HTMLparse from './services/HTMLparse';
 
@@ -10,10 +10,11 @@ const stateHandlers = (state) => {
     state.formState = { ...formState, ...payload };
   };
 
-  const setFeedsStore = (payload) => {
+  const setFeedsStore = (feed) => {
     const { feeds } = onChange.target(state.feedsStore);
+
     const newStore = {
-      feeds: [payload, ...feeds],
+      feeds: [{ ...feed, id: uniqid('feed_') }, ...feeds],
     };
     state.feedsStore = newStore;
   };
@@ -25,7 +26,9 @@ const stateHandlers = (state) => {
     };
 
     const { posts } = onChange.target(state.postsStore);
-    const updatedPosts = [...getNewUniquePosts(posts, newPosts), ...posts];
+    const addedPosts = getNewUniquePosts(posts, newPosts)
+      .map((post) => ({ ...post, id: uniqid('item_'), visited: false }));
+    const updatedPosts = [...addedPosts, ...posts];
     state.postsStore = { posts: updatedPosts };
   };
 
@@ -46,10 +49,19 @@ const stateHandlers = (state) => {
   const fetch = (url) => fetchRSS(url)
     .then(({ data }) => {
       const { channel } = HTMLparse(data.contents);
-      // channel.id = uniqid('feed_');
       return channel;
     });
 
+  // const autoFetch = (feeds) => {
+  //   const fetches = feeds.map((feed) => fetchRSS(feed.url));
+  //   Promise.all(fetches).then((response) => {
+  //     response.forEach(({ data }) => {
+  //       const { channel } = HTMLparse(data.contents);
+  //       const { items } = channel;
+  //       setPostsStore(items);
+  //     });
+  //   });
+  // };
   const autoFetch = (feeds) => {
     const fetches = feeds.map((feed) => fetchRSS(feed.url));
     Promise.all(fetches).then((response) => {
@@ -58,12 +70,14 @@ const stateHandlers = (state) => {
         const { items } = channel;
         setPostsStore(items);
       });
+    }).finally(() => {
+      const { posts } = onChange.target(state.postsStore);
+      setPostsStore(posts);
     });
   };
 
   const autoUpdate = () => {
     const { feeds } = onChange.target(state.feedsStore);
-
     setTimeout(() => {
       if (feeds.length > 0) {
         autoFetch(feeds);

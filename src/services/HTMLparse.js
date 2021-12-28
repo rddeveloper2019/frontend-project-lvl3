@@ -1,5 +1,3 @@
-// import uniqid from 'uniqid';
-
 const getTextContent = (element, selector) => {
   const elem = element.querySelector(selector);
   if (elem) {
@@ -20,36 +18,19 @@ const parse = (xml) => {
 
   const parsed = {
     channel: {
-      // id: uniqid('feed_'),
       title: getTextContent(htmlDoc, 'title'),
       description: getTextContent(htmlDoc, 'description'),
       link: getTextContent(htmlDoc, 'link'),
-      // webMaster: getTextContent(htmlDoc, 'webMaster'),
-      // language: getTextContent(htmlDoc, 'language'),
-      // lastBuildDate: getTextContent(htmlDoc, 'lastBuildDate'),
       items: [],
-      // image: {
-      //   url: getTextContent(htmlDoc, 'image url'),
-      //   title: getTextContent(htmlDoc, 'image title'),
-      //   description: getTextContent(htmlDoc, 'image description'),
-      //   link: getTextContent(htmlDoc, 'image link'),
-
-      // },
     },
   };
 
   fetchedItems.forEach((item) => {
     const itemObj = {
-      // channelId: parsed.channel.id,
-      // id: uniqid('item_'),
       title: getTextContent(item, 'title'),
       guid: getTextContent(item, 'guid'),
       link: getTextContent(item, 'link'),
       description: getTextContent(item, 'description'),
-      // pubDate: getTextContent(item, 'pubDate'),
-      // category: getTextContent(item, 'category'),
-      // author: getTextContent(item, 'author'),
-
     };
     parsed.channel.items.push(itemObj);
   });
