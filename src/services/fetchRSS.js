@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-// const allOriginsAPIUrl = 'https://hexlet-allorigins.herokuapp.com/get?disableCache=true&charset=utf-8&url=';
-
 const generateUrl = (url) => {
   const baseUrl = new URL('https://hexlet-allorigins.herokuapp.com');
   baseUrl.pathname = 'get';
@@ -12,7 +10,6 @@ const generateUrl = (url) => {
 };
 
 const fetchRSSFeeds = (url) => new Promise((resolve) => {
-  // const RSSUrl = new URL(allOriginsAPIUrl + url).toString();
   resolve(
     axios.get(
       generateUrl(url),

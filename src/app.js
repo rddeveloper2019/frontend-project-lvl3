@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import Modal from 'bootstrap';
 import * as yup from 'yup';
+import uniqid from 'uniqid';
 import onChange from 'on-change';
 import stateHandlers from './stateHandlers';
 import view from './view';
@@ -97,18 +98,21 @@ const app = (i18n) => {
     const currentFeeds = feeds.map((feed) => feed.url);
     validateInput(input.value, currentFeeds)
       .then(() => fetch(input.value))
-      .then((parsed) => {
+      .then((channel) => {
         const {
-          title, description, id, items,
-        } = parsed;
-
+          title, description, items,
+        } = channel;
+        const channelId = uniqid('feed_');
         setFeedsStore({
           title,
           description,
-          id,
+          id: channelId,
           url: input.value,
         });
-        setPostsStore(items);
+        const itemsWithAdditionalData = items.map((item) => ({
+          ...item, channelId, id: uniqid('item_'), visited: false,
+        }));
+        setPostsStore(itemsWithAdditionalData);
         setFormState({
           status: 'ready',
           message: [`${i18n.t('form.feedback.success')}`],

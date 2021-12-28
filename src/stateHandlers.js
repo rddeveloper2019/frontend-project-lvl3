@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import onChange from 'on-change';
+
 import fetchRSS from './services/fetchRSS';
 import HTMLparse from './services/HTMLparse';
 
@@ -45,6 +46,7 @@ const stateHandlers = (state) => {
   const fetch = (url) => fetchRSS(url)
     .then(({ data }) => {
       const { channel } = HTMLparse(data.contents);
+      // channel.id = uniqid('feed_');
       return channel;
     });
 
@@ -60,16 +62,7 @@ const stateHandlers = (state) => {
   };
 
   const autoUpdate = () => {
-    // const { feedsStore, formState } = onChange.target(state);
-    const { feedsStore } = onChange.target(state);
-
-    const { feeds } = feedsStore;
-
-    // let needUpdate;
-
-    // if (feeds.length > 0) {
-    //   needUpdate = formState.status === 'ready' || formState.status === 'error';
-    // }
+    const { feeds } = onChange.target(state.feedsStore);
 
     setTimeout(() => {
       if (feeds.length > 0) {
