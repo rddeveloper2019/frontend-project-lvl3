@@ -26,10 +26,11 @@ const stateHandlers = (state) => {
     };
 
     const { posts } = onChange.target(state.postsStore);
-    const addedPosts = getNewUniquePosts(posts, newPosts)
+
+    const newAddedPosts = getNewUniquePosts(posts, newPosts)
       .map((post) => ({ ...post, id: uniqid('item_'), visited: false }));
-    const updatedPosts = [...addedPosts, ...posts];
-    state.postsStore = { posts: updatedPosts };
+
+    state.postsStore = { posts: [...newAddedPosts, ...posts] };
   };
 
   const setPostAsVisited = (id) => {
@@ -52,16 +53,6 @@ const stateHandlers = (state) => {
       return channel;
     });
 
-  // const autoFetch = (feeds) => {
-  //   const fetches = feeds.map((feed) => fetchRSS(feed.url));
-  //   Promise.all(fetches).then((response) => {
-  //     response.forEach(({ data }) => {
-  //       const { channel } = HTMLparse(data.contents);
-  //       const { items } = channel;
-  //       setPostsStore(items);
-  //     });
-  //   });
-  // };
   const autoFetch = (feeds) => {
     const fetches = feeds.map((feed) => fetchRSS(feed.url));
     Promise.all(fetches).then((response) => {

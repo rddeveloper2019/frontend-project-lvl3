@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import Modal from 'bootstrap';
 import * as yup from 'yup';
-// import uniqid from 'uniqid';
 import onChange from 'on-change';
 import stateHandlers from './stateHandlers';
 import view from './view';
@@ -15,17 +14,6 @@ const app = (i18n) => {
       inputValue: null,
       message: null,
     },
-
-    // feedsStore: {
-    //   feeds: [
-    //     {
-    //       title: 'Lorem ipsum feed for an interval of 30 seconds with 10 item(s)',
-    //       description: 'This is a constantly updating lorem ipsum feed',
-    //       id: 'feed_kxqeeeas',
-    //       url: 'http://lorem-rss.herokuapp.com/feed?unit=second&interval=30',
-    //     },
-    //   ],
-    // },
     feedsStore: {
       feeds: [],
     },
@@ -112,16 +100,12 @@ const app = (i18n) => {
         const {
           title, description, items,
         } = channel;
-        // const channelId = ;
         setFeedsStore({
           title,
           description,
-          // id: uniqid('feed_'),
           url: input.value,
         });
-        // const itemsWithAdditionalData = items.map((item) => ({
-        //   ...item, channelId,
-        // }));
+
         setPostsStore(items);
         setFormState({
           status: 'ready',
