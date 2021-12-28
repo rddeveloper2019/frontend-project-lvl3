@@ -189,10 +189,10 @@ const switchFormByStatus = (container, data) => {
 };
 
 const view = (elements, i18n) => (path, value) => {
-  if (path === 'formState') {
-    switchFormByStatus(elements.formContainer, value);
-  }
   switch (path) {
+    case 'formState':
+      switchFormByStatus(elements.formContainer, value);
+      break;
     case 'feedsStore':
       renderFeeds(elements.feedsContainer, value, i18n);
       break;
