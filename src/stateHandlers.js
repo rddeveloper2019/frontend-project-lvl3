@@ -46,9 +46,6 @@ const stateHandlers = (state) => {
     .then(({ data }) => {
       const { channel } = HTMLparse(data.contents);
       return channel;
-    })
-    .catch((err) => {
-      throw new Error(err.message);
     });
 
   const autoFetch = (feeds) => {
