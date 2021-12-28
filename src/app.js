@@ -25,7 +25,6 @@ const app = (i18n) => {
     UI: {
       visitedPostsIDs: [],
     },
-
   };
 
   const form = document.querySelector('form');
@@ -67,7 +66,6 @@ const app = (i18n) => {
     setPostAsVisited,
     autoUpdate,
     fetch,
-
   } = stateHandlers(state);
 
   autoUpdate();
@@ -88,7 +86,7 @@ const app = (i18n) => {
     return schema.validate({ value });
   };
 
-  input.focus();
+  // input.focus();
 
   input.addEventListener('input', (e) => {
     const { value } = e.target;
@@ -102,9 +100,7 @@ const app = (i18n) => {
 
     Promise.all([validateInput(input.value), fetch(input.value)])
       .then(([, parsed]) => {
-        const {
-          title, description, id, items,
-        } = parsed;
+        const { title, description, id, items } = parsed;
 
         setFeedsStore({
           title,
@@ -122,9 +118,7 @@ const app = (i18n) => {
       .catch((err) => {
         setFormState({
           status: 'error',
-          message: [
-            `${i18n.t(`form.feedback.${err.message}`)}`,
-          ],
+          message: [`${i18n.t(`form.feedback.${err.message}`)}`],
         });
       });
   });
