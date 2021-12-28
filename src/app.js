@@ -70,10 +70,7 @@ const app = (i18n) => {
 
   autoUpdate();
 
-  const validateInput = (value) => {
-    const { feeds } = onChange.target(state).feedsStore;
-    const currentFeeds = feeds.map((feed) => feed.url);
-
+  const validateInput = (value, currentFeeds) => {
     const schema = yup.object().shape({
       value: yup
         .string()
@@ -86,8 +83,6 @@ const app = (i18n) => {
     return schema.validate({ value });
   };
 
-  // input.focus();
-
   input.addEventListener('input', (e) => {
     const { value } = e.target;
     setFormState({ status: 'editing', inputValue: value });
@@ -98,9 +93,14 @@ const app = (i18n) => {
 
     setFormState({ status: 'sending' });
 
-    Promise.all([validateInput(input.value), fetch(input.value)])
-      .then(([, parsed]) => {
-        const { title, description, id, items } = parsed;
+    const { feeds } = onChange.target(state).feedsStore;
+    const currentFeeds = feeds.map((feed) => feed.url);
+    validateInput(input.value, currentFeeds)
+      .then(() => fetch(input.value))
+      .then((parsed) => {
+        const {
+          title, description, id, items,
+        } = parsed;
 
         setFeedsStore({
           title,
@@ -121,6 +121,32 @@ const app = (i18n) => {
           message: [`${i18n.t(`form.feedback.${err.message}`)}`],
         });
       });
+
+    // Promise.all([validateInput(input.value), fetch(input.value)])
+    //   .then(([, parsed]) => {
+    //     const {
+    //       title, description, id, items,
+    //     } = parsed;
+
+    //     setFeedsStore({
+    //       title,
+    //       description,
+    //       id,
+    //       url: input.value,
+    //     });
+    //     setPostsStore(items);
+    //     setFormState({
+    //       status: 'ready',
+    //       message: [`${i18n.t('form.feedback.success')}`],
+    //       inputValue: '',
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     setFormState({
+    //       status: 'error',
+    //       message: [`${i18n.t(`form.feedback.${err.message}`)}`],
+    //     });
+    //   });
   });
 
   postsContainer.addEventListener('click', (e) => {
