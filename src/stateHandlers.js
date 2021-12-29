@@ -55,21 +55,18 @@ const stateHandlers = (state) => {
 
   const autoUpdate = () => {
     const { feeds } = onChange.target(state.feedsStore);
-    const responses = [];
-    const fetches = feeds.map((feed) => fetchRSS(feed.url).then(({ data }) => {
-      responses.push(data);
-    }));
-
-    Promise.all(fetches).finally(() => {
-      if (responses.length > 0) {
-        responses.forEach((data) => {
-          const { channel } = HTMLparse(data.contents);
-          const { items } = channel;
-          setPostsStore(items);
-        });
-      }
+    if (feeds.length > 0) {
+      const fetches = feeds.map((feed) => fetchRSS(feed.url).then(({ data }) => {
+        const { channel } = HTMLparse(data.contents);
+        const { items } = channel;
+        setPostsStore(items);
+      }));
+      Promise.all(fetches).finally(() => {
+        setTimeout(() => { autoUpdate(); }, 5000);
+      });
+    } else {
       setTimeout(() => { autoUpdate(); }, 5000);
-    });
+    }
   };
 
   return {
