@@ -95,6 +95,18 @@ const addVisitedPost = (postsContainer, data) => {
   visitedPostEl.classList.add('link-secondary');
 };
 
+const renderModal = ({
+  modalBody,
+  modalTitle,
+  modalReadMoreLink,
+}, { title, description, link }) => {
+  // eslint-disable-next-line no-param-reassign
+  modalTitle.textContent = title;
+  // eslint-disable-next-line no-param-reassign
+  modalBody.textContent = description;
+  modalReadMoreLink.setAttribute('href', link);
+};
+
 const renderPosts = (container, data, i18n) => {
   const { posts } = data;
 
@@ -204,7 +216,9 @@ const view = (elements, i18n) => (path, value) => {
     case 'UI.visitedPostsIDs':
       addVisitedPost(elements.postsContainer, value);
       break;
-
+    case 'UI.modalData':
+      renderModal(elements.modalContainer, value);
+      break;
     default:
       break;
   }

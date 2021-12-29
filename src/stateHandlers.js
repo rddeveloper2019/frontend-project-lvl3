@@ -47,6 +47,9 @@ const stateHandlers = (state) => {
     state.postsStore.posts = [...getUpdatedPosts(posts, id)];
     state.UI.visitedPostsIDs = [...state.UI.visitedPostsIDs, id];
   };
+  const setModalData = (payload) => {
+    state.UI.modalData = { ...payload };
+  };
 
   const fetch = (url) => fetchRSS(url)
     .then(({ data }) => {
@@ -75,6 +78,7 @@ const stateHandlers = (state) => {
     setFeedsStore,
     setPostsStore,
     setPostAsVisited,
+    setModalData,
     autoUpdate,
     fetch,
   };

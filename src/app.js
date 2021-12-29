@@ -23,6 +23,7 @@ const app = (i18n) => {
 
     UI: {
       visitedPostsIDs: [],
+      modalData: null,
     },
   };
 
@@ -47,7 +48,6 @@ const app = (i18n) => {
       formFeedbackEl,
     },
     modalContainer: {
-      modal,
       modalBody,
       modalTitle,
       modalReadMoreLink,
@@ -63,6 +63,7 @@ const app = (i18n) => {
     setFeedsStore,
     setPostsStore,
     setPostAsVisited,
+    setModalData,
     autoUpdate,
     fetch,
   } = stateHandlers(state);
@@ -127,10 +128,7 @@ const app = (i18n) => {
     if (e.target.tagName === 'BUTTON') {
       const { posts } = onChange.target(state).postsStore;
       const [currentPost] = posts.filter((post) => post.id === dataId);
-      const { title, description, link } = currentPost;
-      modalTitle.textContent = title;
-      modalBody.textContent = description;
-      modalReadMoreLink.setAttribute('href', link);
+      setModalData(currentPost);
       setPostAsVisited(dataId);
     } else if (e.target.tagName === 'A') {
       setPostAsVisited(dataId);
