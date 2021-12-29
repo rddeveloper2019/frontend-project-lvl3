@@ -6,6 +6,7 @@ import HTMLparse from './services/HTMLparse';
 
 const stateHandlers = (state) => {
   const setFormState = (payload = {}) => {
+    console.log(payload);
     const { formState } = onChange.target(state);
     state.formState = { ...formState, ...payload };
   };

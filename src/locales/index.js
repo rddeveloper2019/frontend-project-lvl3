@@ -3,7 +3,7 @@ const ru = {
 
     form: {
       feedback: {
-        success: 'RSS успешно загружен',
+        'fetching success': 'RSS успешно загружен',
         'invalid URL': 'Ссылка должна быть валидным URL',
         'value required': 'Не должно быть пустым',
         'duplicated URL': 'RSS уже существует',

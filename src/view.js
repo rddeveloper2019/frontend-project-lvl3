@@ -168,7 +168,7 @@ const renderFeeds = (container, data, i18n) => {
   container.append(feedsContainer);
 };
 
-const switchFormByStatus = (container, data) => {
+const switchFormByStatus = (container, data, i18n) => {
   const { status, message } = data;
 
   const renderBy = {
@@ -179,10 +179,10 @@ const switchFormByStatus = (container, data) => {
       renderForm(container, status);
     },
     error: () => {
-      renderForm(container, status, message);
+      renderForm(container, status, i18n.t(`form.feedback.${message}`));
     },
     ready: () => {
-      renderForm(container, status, message);
+      renderForm(container, status, i18n.t(`form.feedback.${message}`));
     },
   };
   renderBy[status]();
@@ -191,7 +191,7 @@ const switchFormByStatus = (container, data) => {
 const view = (elements, i18n) => (path, value) => {
   switch (path) {
     case 'formState':
-      switchFormByStatus(elements.formContainer, value);
+      switchFormByStatus(elements.formContainer, value, i18n);
       break;
     case 'feedsStore':
       renderFeeds(elements.feedsContainer, value, i18n);

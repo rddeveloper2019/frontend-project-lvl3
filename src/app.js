@@ -109,14 +109,14 @@ const app = (i18n) => {
         setPostsStore(items);
         setFormState({
           status: 'ready',
-          message: [`${i18n.t('form.feedback.success')}`],
+          message: 'fetching success',
           inputValue: '',
         });
       })
       .catch((err) => {
         setFormState({
           status: 'error',
-          message: [`${i18n.t(`form.feedback.${err.message}`)}`],
+          message: err.message,
         });
       });
   });
@@ -132,9 +132,7 @@ const app = (i18n) => {
       modalBody.textContent = description;
       modalReadMoreLink.setAttribute('href', link);
       setPostAsVisited(dataId);
-    }
-
-    if (e.target.tagName === 'A') {
+    } else if (e.target.tagName === 'A') {
       setPostAsVisited(dataId);
     }
   });
