@@ -53,30 +53,23 @@ const stateHandlers = (state) => {
       return channel;
     });
 
-  const autoFetch = (feeds) => {
-    const fetches = feeds.map((feed) => fetchRSS(feed.url));
-    Promise.all(fetches).then((response) => {
-      response.forEach(({ data }) => {
-        const { channel } = HTMLparse(data.contents);
-        const { items } = channel;
-        setPostsStore(items);
-      });
-    }).finally(() => {
-      const { posts } = onChange.target(state.postsStore);
-      setPostsStore(posts);
-    });
-  };
-
   const autoUpdate = () => {
     const { feeds } = onChange.target(state.feedsStore);
-    setTimeout(() => {
-      if (feeds.length > 0) {
-        autoFetch(feeds);
-        autoUpdate();
-      } else {
-        autoUpdate();
+    const responses = [];
+    const fetches = feeds.map((feed) => fetchRSS(feed.url).then(({ data }) => {
+      responses.push(data);
+    }));
+
+    Promise.all(fetches).finally(() => {
+      if (responses.length > 0) {
+        responses.forEach((data) => {
+          const { channel } = HTMLparse(data.contents);
+          const { items } = channel;
+          setPostsStore(items);
+        });
       }
-    }, 5000);
+      setTimeout(() => { autoUpdate(); }, 5000);
+    });
   };
 
   return {
@@ -86,7 +79,6 @@ const stateHandlers = (state) => {
     setPostAsVisited,
     autoUpdate,
     fetch,
-
   };
 };
 
