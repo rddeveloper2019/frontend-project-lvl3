@@ -115,9 +115,13 @@ const app = (i18n) => {
         });
       })
       .catch((err) => {
+        let { message } = err;
+        if (message.includes('404') || message.includes('fail')) {
+          message = 'Network Error';
+        }
         setFormState({
           status: 'error',
-          message: err.message,
+          message,
         });
       });
   });

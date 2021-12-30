@@ -13,9 +13,7 @@ const fetchRSSFeeds = (url) => new Promise((resolve) => {
   resolve(
     axios.get(
       generateUrl(url),
-    ).catch(() => {
-      throw new Error('Network Error');
-    }),
+    ),
   );
 });
 
